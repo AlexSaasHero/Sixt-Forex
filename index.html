@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SIXT PRICE INTELLIGENCE - Full Stations & ACRISS Codes Integration</title>
+  <title>SIXT PRICE INTELLIGENCE - ALL STATIONS VIEW & FILTER</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -60,7 +60,7 @@
 
     .card {
       width: 100%;
-      max-width: 520px;
+      max-width: 540px;
       background-color: var(--card-bg);
       border: 1px solid var(--card-border);
       border-radius: 24px;
@@ -94,7 +94,7 @@
     }
 
     .section-title {
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 800;
       text-transform: uppercase;
       color: #FFF;
@@ -151,6 +151,7 @@
       background: rgba(0,0,0,0.3);
       padding: 12px;
       border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.05);
     }
 
     .badge-good {
@@ -161,6 +162,16 @@
       padding: 6px 10px;
       border-radius: 6px;
       border: 1px solid #2ed573;
+    }
+
+    .badge-bad {
+      font-size: 9px;
+      font-weight: 800;
+      background: rgba(255, 71, 87, 0.15);
+      color: #ff4757;
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: 1px solid #ff4757;
     }
 
     .logs-drawer {
@@ -190,15 +201,15 @@
   <div class="card">
     
     <!-- Header -->
-    <div style="text-align: center; margin-bottom: 24px;">
+    <div style="text-align: center; margin-bottom: 20px;">
       <h1 class="title">SIXT <span>PRICE INTELLIGENCE</span></h1>
-      <p class="subtitle">Analisi Medie Storiche & Comparatore Categorie ACRISS</p>
+      <p class="subtitle">Panoramica Prezzi Città & Filtro Stazioni Specifiche</p>
     </div>
 
-    <!-- SEZIONE 1: Selezione Luogo, Stazione e Categoria -->
+    <!-- CONTROLLI E FILTRI -->
     <div class="section-box">
-      <div class="section-title">1. Configura Ricerca & Categoria</div>
-      
+      <div class="section-title">1. Seleziona Città e Categoria</div>
+
       <!-- Macro Città -->
       <div style="margin-top: 10px;">
         <label>Macro Città</label>
@@ -213,19 +224,19 @@
         </select>
       </div>
 
-      <!-- Stazione Specifica della Città -->
+      <!-- Filtro Stazione Specifica (Opzionale) -->
       <div style="margin-top: 10px;">
-        <label>Stazione / Punto di Ritiro Specifico</label>
+        <label>Filtra Stazione (Opzionale)</label>
         <select id="select-station">
-          <!-- Dynamically injected -->
+          <!-- Dynamically populated -->
         </select>
       </div>
 
-      <!-- Menù Categorie ACRISS -->
+      <!-- Categoria ACRISS -->
       <div style="margin-top: 10px;">
         <label>Categoria Veicolo / Codice ACRISS</label>
         <select id="select-category">
-          <!-- Dynamically injected -->
+          <!-- Dynamically populated -->
         </select>
       </div>
 
@@ -242,38 +253,26 @@
       </div>
 
       <button class="btn-primary" style="margin-top: 14px;" onclick="runComparison()">
-        CONFRONTA PREZZO vs MEDIA STORICA
+        MOSTRA PREZZI E COMPARAZIONE
       </button>
     </div>
 
-    <!-- SEZIONE 2: Risultato Comparazione -->
+    <!-- RISULTATI PER TUTTE LE STAZIONI -->
     <div id="section-results" class="section-box" style="margin-top: 16px; border: 1px solid #FF5F00; display: none;">
-      <div id="res-header-title" class="section-title" style="color: #FF5F00;">
-        2. Risultato per [CLMR/CLAR] a Monaco di Baviera
+      <div class="section-title" style="color: #FF5F00; display: flex; justify-content: space-between;">
+        <span id="res-category-code">2. Risultati per [CLMR/CLAR]</span>
+        <span id="res-city-name" style="color: #FFF;">Monaco di Baviera</span>
       </div>
-      
-      <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 8px;">
-        <div class="result-card">
-          <div>
-            <div id="res-station-name" style="font-size: 11px; color: #8E8E93;">
-              Stazione: Monaco Aeroporto (MUC)
-            </div>
-            <div id="res-price-detected" style="font-size: 14px; font-weight: 800; margin-top: 2px;">
-              Prezzo Rilevato: $41/gg
-            </div>
-            <div id="res-price-avg" style="font-size: 10px; color: #AAA;">
-              Media Storica della Categoria: $48/gg
-            </div>
-          </div>
-          <div id="res-badge" class="badge-good">-14.5% SOTTO LA MEDIA</div>
-        </div>
+
+      <div id="results-list" style="margin-top: 12px; display: flex; flex-direction: column; gap: 10px;">
+        <!-- Dynamically injected station cards -->
       </div>
     </div>
 
     <!-- Controls for Background Cloud Cron Engine -->
     <div style="margin-top: 16px;">
       <button id="btn-cron" class="btn-primary" style="background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 95, 0, 0.4); color: #FF5F00; box-shadow: none;" onclick="runManualCron()">
-        ⚡ TEST MOTORE CLOUD CRON ([CLMR/CLAR] MONACO DI BAVIERA)
+        ⚡ TEST MOTORE CLOUD CRON (MONACO DI BAVIERA)
       </button>
     </div>
 
@@ -295,92 +294,83 @@
   <script>
     const CITY_STATIONS_MAP = {
       'Monaco di Baviera': [
-        { id: 'MUC_ALL', name: 'Tutte le stazioni di Monaco' },
-        { id: 'MUC_AP', name: 'Monaco Aeroporto (MUC)' },
-        { id: 'MUC_HBF', name: 'Monaco Stazione Centrale (Hauptbahnhof)' },
-        { id: 'MUC_CTR', name: 'Monaco Centro / Stachus' },
-        { id: 'MUC_EAST', name: 'Monaco Ostbahnhof' }
+        { id: 'MUC_AP', name: 'Monaco Aeroporto (MUC)', type: 'Aeroporto', currentPrice: 42, avgPrice: 48 },
+        { id: 'MUC_HBF', name: 'Monaco Stazione Centrale (Hauptbahnhof)', type: 'Stazione', currentPrice: 38, avgPrice: 45 },
+        { id: 'MUC_CTR', name: 'Monaco Centro / Stachus', type: 'Città', currentPrice: 36, avgPrice: 43 },
+        { id: 'MUC_EAST', name: 'Monaco Ostbahnhof', type: 'Stazione', currentPrice: 37, avgPrice: 44 }
       ],
       'Würzburg': [
-        { id: 'WUE_ALL', name: 'Tutte le stazioni di Würzburg' },
-        { id: 'WUE_HBF', name: 'Würzburg Stazione Centrale' },
-        { id: 'WUE_CTR', name: 'Würzburg Nürnberger Str.' }
+        { id: 'WUE_HBF', name: 'Würzburg Stazione Centrale', type: 'Stazione', currentPrice: 34, avgPrice: 39 },
+        { id: 'WUE_CTR', name: 'Würzburg Nürnberger Str.', type: 'Città', currentPrice: 32, avgPrice: 37 }
       ],
       'Norimberga': [
-        { id: 'NUE_ALL', name: 'Tutte le stazioni di Norimberga' },
-        { id: 'NUE_AP', name: 'Norimberga Aeroporto (NUE)' },
-        { id: 'NUE_HBF', name: 'Norimberga Stazione Centrale' }
+        { id: 'NUE_AP', name: 'Norimberga Aeroporto (NUE)', type: 'Aeroporto', currentPrice: 39, avgPrice: 42 },
+        { id: 'NUE_HBF', name: 'Norimberga Stazione Centrale', type: 'Stazione', currentPrice: 35, avgPrice: 40 }
       ],
       'Francoforte': [
-        { id: 'FRA_ALL', name: 'Tutte le stazioni di Francoforte' },
-        { id: 'FRA_AP', name: 'Francoforte Aeroporto (FRA)' },
-        { id: 'FRA_HBF', name: 'Francoforte Stazione Centrale' },
-        { id: 'FRA_WEST', name: 'Francoforte Ovest / Camberger Str.' }
+        { id: 'FRA_AP', name: 'Francoforte Aeroporto (FRA)', type: 'Aeroporto', currentPrice: 46, avgPrice: 52 },
+        { id: 'FRA_HBF', name: 'Francoforte Stazione Centrale', type: 'Stazione', currentPrice: 41, avgPrice: 47 },
+        { id: 'FRA_WEST', name: 'Francoforte Ovest / Camberger Str.', type: 'Città', currentPrice: 39, avgPrice: 45 }
       ],
       'Milano': [
-        { id: 'MIL_ALL', name: 'Tutte le stazioni di Milano' },
-        { id: 'MIL_MXP', name: 'Milano Malpensa (MXP)' },
-        { id: 'MIL_LIN', name: 'Milano Linate (LIN)' },
-        { id: 'MIL_BGY', name: 'Milano Bergamo Orio al Serio (BGY)' },
-        { id: 'MIL_CTR', name: 'Milano Stazione Centrale' }
+        { id: 'MIL_MXP', name: 'Milano Malpensa (MXP)', type: 'Aeroporto', currentPrice: 35, avgPrice: 41 },
+        { id: 'MIL_LIN', name: 'Milano Linate (LIN)', type: 'Aeroporto', currentPrice: 37, avgPrice: 43 },
+        { id: 'MIL_BGY', name: 'Milano Bergamo Orio al Serio (BGY)', type: 'Aeroporto', currentPrice: 31, avgPrice: 38 },
+        { id: 'MIL_CTR', name: 'Milano Stazione Centrale', type: 'Stazione', currentPrice: 36, avgPrice: 42 }
       ],
       'Roma': [
-        { id: 'ROM_ALL', name: 'Tutte le stazioni di Roma' },
-        { id: 'ROM_FCO', name: 'Roma Fiumicino (FCO)' },
-        { id: 'ROM_CIA', name: 'Roma Ciampino (CIA)' },
-        { id: 'ROM_TER', name: 'Roma Stazione Termini' },
-        { id: 'ROM_TIB', name: 'Roma Stazione Tiburtina' }
+        { id: 'ROM_FCO', name: 'Roma Fiumicino (FCO)', type: 'Aeroporto', currentPrice: 36, avgPrice: 42 },
+        { id: 'ROM_CIA', name: 'Roma Ciampino (CIA)', type: 'Aeroporto', currentPrice: 33, avgPrice: 39 },
+        { id: 'ROM_TER', name: 'Roma Stazione Termini', type: 'Stazione', currentPrice: 38, avgPrice: 44 }
       ],
       'Venezia': [
-        { id: 'VCE_ALL', name: 'Tutte le stazioni di Venezia' },
-        { id: 'VCE_AP', name: 'Venezia Marco Polo (VCE)' },
-        { id: 'VCE_PR', name: 'Venezia Piazzale Roma' },
-        { id: 'VCE_ME', name: 'Venezia Mestre Stazione' }
+        { id: 'VCE_AP', name: 'Venezia Marco Polo (VCE)', type: 'Aeroporto', currentPrice: 40, avgPrice: 46 },
+        { id: 'VCE_PR', name: 'Venezia Piazzale Roma', type: 'Città', currentPrice: 42, avgPrice: 49 },
+        { id: 'VCE_ME', name: 'Venezia Mestre Stazione', type: 'Stazione', currentPrice: 36, avgPrice: 41 }
       ]
     };
 
     const ACRISS_CATEGORIES = [
-      { code: 'MCMR', name: 'Berlina - Citroën C1 (Manuale)', baseAvg: 35 },
-      { code: 'ECMR', name: 'Berlina - Fiat 500 (Manuale)', baseAvg: 38 },
-      { code: 'EDMR', name: 'Berlina - VW Polo (Manuale)', baseAvg: 42 },
-      { code: 'CCMR/CCAR', name: 'Berlina Premium - MINI Hatch (Man/Auto)', baseAvg: 46 },
-      { code: 'CDMR', name: 'Berlina - Fiat Tipo (Manuale)', baseAvg: 45 },
-      { code: 'CLMR/CLAR', name: 'Berlina Premium - VW Golf (Man/Auto)', baseAvg: 48 },
-      { code: 'CWMR', name: 'Station Wagon - Fiat Tipo SW (Manuale)', baseAvg: 52 },
-      { code: 'IDMR/IDAR', name: 'Berlina Premium - Alfa Romeo Giulietta (Man/Auto)', baseAvg: 55 },
-      { code: 'ILMR/ILAR', name: 'Berlina Premium - BMW Serie 1 (Man/Auto)', baseAvg: 58 },
-      { code: 'SDMR/SDAR', name: 'Berlina Premium - BMW Serie 2 Active Tourer (Man/Auto)', baseAvg: 62 },
-      { code: 'SWAR', name: 'Station Wagon Premium - BMW Serie 2 Grand Tourer (Auto)', baseAvg: 68 },
-      { code: 'FDAR', name: 'Berlina Premium - Alfa Romeo Giulia (Auto)', baseAvg: 72 },
-      { code: 'FWAR', name: 'Station Wagon Premium - BMW Serie 3 Touring (Auto)', baseAvg: 76 },
-      { code: 'PDAR', name: 'Berlina Premium - Audi A5 Sportback (Auto)', baseAvg: 82 },
-      { code: 'LDAR', name: 'Berlina Premium - BMW Serie 5 (Auto)', baseAvg: 88 },
-      { code: 'LWAR', name: 'Station Wagon Premium - BMW Serie 5 Touring (Auto)', baseAvg: 92 },
-      { code: 'XCAR', name: 'Berlina Premium - BMW Serie 6 GT (Auto)', baseAvg: 105 },
-      { code: 'XDAR', name: 'Berlina Premium - BMW Serie 7 (Auto)', baseAvg: 135 },
-      { code: 'XSAR', name: 'Berlina Premium - BMW Serie 8 (Auto)', baseAvg: 155 },
-      { code: 'FSAR', name: 'Coupé Premium - BMW Serie 2 Coupé (Auto)', baseAvg: 78 },
-      { code: 'LSAR', name: 'Coupé Premium - BMW Serie 4 Gran Coupé (Auto)', baseAvg: 95 },
-      { code: 'CVMR', name: 'Minivan - Fiat Qubo (Manuale)', baseAvg: 58 },
-      { code: 'IVAR', name: 'Minivan - VW Touran 7S (Auto)', baseAvg: 85 },
-      { code: 'SVAR', name: 'Minivan - Peugeot 5008 (Auto)', baseAvg: 90 },
-      { code: 'FVMR/FVAR', name: 'Minivan - Fiat Talento (Man/Auto)', baseAvg: 110 },
-      { code: 'CTMR/CTAR', name: 'Cabriolet - Fiat 500C (Man/Auto)', baseAvg: 65 },
-      { code: 'STAR', name: 'Cabriolet - BMW Serie 2 Cabrio (Auto)', baseAvg: 85 },
-      { code: 'LTAR', name: 'Cabriolet - BMW Serie 4 Cabrio (Auto)', baseAvg: 105 },
-      { code: 'PTAR', name: 'Cabriolet - BMW Z4 (Auto)', baseAvg: 120 },
-      { code: 'CFMR', name: 'Fuoristrada / SUV - Fiat 500X (Manuale)', baseAvg: 55 },
-      { code: 'IFMR/IFAR', name: 'Fuoristrada / SUV - Jeep Renegade (Man/Auto)', baseAvg: 62 },
-      { code: 'SFMR/SFAR', name: 'Fuoristrada / SUV - Ford Kuga (Man/Auto)', baseAvg: 70 },
-      { code: 'FFAR', name: 'Fuoristrada / SUV - BMW X1 (Auto)', baseAvg: 78 },
-      { code: 'PFAR', name: 'Fuoristrada / SUV - Jaguar I-Pace (Auto)', baseAvg: 115 },
-      { code: 'XFAR', name: 'Fuoristrada / SUV - BMW X5 (Auto)', baseAvg: 130 }
+      { code: 'MCMR', name: 'Berlina - Citroën C1 (Manuale)' },
+      { code: 'ECMR', name: 'Berlina - Fiat 500 (Manuale)' },
+      { code: 'EDMR', name: 'Berlina - VW Polo (Manuale)' },
+      { code: 'CCMR/CCAR', name: 'Berlina Premium - MINI Hatch (Man/Auto)' },
+      { code: 'CDMR', name: 'Berlina - Fiat Tipo (Manuale)' },
+      { code: 'CLMR/CLAR', name: 'Berlina Premium - VW Golf (Man/Auto)' },
+      { code: 'CWMR', name: 'Station Wagon - Fiat Tipo SW (Manuale)' },
+      { code: 'IDMR/IDAR', name: 'Berlina Premium - Alfa Romeo Giulietta (Man/Auto)' },
+      { code: 'ILMR/ILAR', name: 'Berlina Premium - BMW Serie 1 (Man/Auto)' },
+      { code: 'SDMR/SDAR', name: 'Berlina Premium - BMW Serie 2 Active Tourer (Man/Auto)' },
+      { code: 'SWAR', name: 'Station Wagon Premium - BMW Serie 2 Grand Tourer (Auto)' },
+      { code: 'FDAR', name: 'Berlina Premium - Alfa Romeo Giulia (Auto)' },
+      { code: 'FWAR', name: 'Station Wagon Premium - BMW Serie 3 Touring (Auto)' },
+      { code: 'PDAR', name: 'Berlina Premium - Audi A5 Sportback (Auto)' },
+      { code: 'LDAR', name: 'Berlina Premium - BMW Serie 5 (Auto)' },
+      { code: 'LWAR', name: 'Station Wagon Premium - BMW Serie 5 Touring (Auto)' },
+      { code: 'XCAR', name: 'Berlina Premium - BMW Serie 6 GT (Auto)' },
+      { code: 'XDAR', name: 'Berlina Premium - BMW Serie 7 (Auto)' },
+      { code: 'XSAR', name: 'Berlina Premium - BMW Serie 8 (Auto)' },
+      { code: 'FSAR', name: 'Coupé Premium - BMW Serie 2 Coupé (Auto)' },
+      { code: 'LSAR', name: 'Coupé Premium - BMW Serie 4 Gran Coupé (Auto)' },
+      { code: 'CVMR', name: 'Minivan - Fiat Qubo (Manuale)' },
+      { code: 'IVAR', name: 'Minivan - VW Touran 7S (Auto)' },
+      { code: 'SVAR', name: 'Minivan - Peugeot 5008 (Auto)' },
+      { code: 'FVMR/FVAR', name: 'Minivan - Fiat Talento (Man/Auto)' },
+      { code: 'CTMR/CTAR', name: 'Cabriolet - Fiat 500C (Man/Auto)' },
+      { code: 'STAR', name: 'Cabriolet - BMW Serie 2 Cabrio (Auto)' },
+      { code: 'LTAR', name: 'Cabriolet - BMW Serie 4 Cabrio (Auto)' },
+      { code: 'PTAR', name: 'Cabriolet - BMW Z4 (Auto)' },
+      { code: 'CFMR', name: 'Fuoristrada / SUV - Fiat 500X (Manuale)' },
+      { code: 'IFMR/IFAR', name: 'Fuoristrada / SUV - Jeep Renegade (Man/Auto)' },
+      { code: 'SFMR/SFAR', name: 'Fuoristrada / SUV - Ford Kuga (Man/Auto)' },
+      { code: 'FFAR', name: 'Fuoristrada / SUV - BMW X1 (Auto)' },
+      { code: 'PFAR', name: 'Fuoristrada / SUV - Jaguar I-Pace (Auto)' },
+      { code: 'XFAR', name: 'Fuoristrada / SUV - BMW X5 (Auto)' }
     ];
 
     let selectedCity = 'Monaco di Baviera';
 
     function initUI() {
-      // Render ACRISS categories
       const catSelect = document.getElementById('select-category');
       catSelect.innerHTML = ACRISS_CATEGORIES.map(cat => 
         `<option value="${cat.code}">[${cat.code}] ${cat.name}</option>`
@@ -392,11 +382,12 @@
     function renderStations() {
       const stationsSelect = document.getElementById('select-station');
       const stations = CITY_STATIONS_MAP[selectedCity] || [];
-      stationsSelect.innerHTML = stations.map(st => 
-        `<option value="${st.id}">${st.name}</option>`
-      ).join('');
+      
+      let html = `<option value="ALL">✨ Mostra TUTTE le stazioni di ${selectedCity}</option>`;
+      html += stations.map(st => `<option value="${st.id}">📍 ${st.name}</option>`).join('');
+      stationsSelect.innerHTML = html;
 
-      document.getElementById('btn-cron').innerText = `⚡ TEST MOTORE CLOUD CRON ([CLMR/CLAR] ${selectedCity.toUpperCase()})`;
+      document.getElementById('btn-cron').innerText = `⚡ TEST MOTORE CLOUD CRON (${selectedCity.toUpperCase()})`;
     }
 
     function handleCityChange() {
@@ -406,24 +397,39 @@
 
     function runComparison() {
       const city = selectedCity;
-      const stationId = document.getElementById('select-station').value;
+      const stationFilter = document.getElementById('select-station').value;
       const categoryCode = document.getElementById('select-category').value;
 
-      const stationObj = CITY_STATIONS_MAP[city].find(s => s.id === stationId) || CITY_STATIONS_MAP[city][0];
-      const categoryObj = ACRISS_CATEGORIES.find(c => c.code === categoryCode) || ACRISS_CATEGORIES[0];
-
-      const historicalAvg = categoryObj.baseAvg || 48;
-      const detectedPrice = Math.round(historicalAvg * 0.855); // -14.5% sotto la media
-      const diffPct = (((detectedPrice - historicalAvg) / historicalAvg) * 100).toFixed(1);
+      const allCityStations = CITY_STATIONS_MAP[city] || [];
+      const displayedStations = stationFilter === 'ALL'
+        ? allCityStations
+        : allCityStations.filter(s => s.id === stationFilter);
 
       document.getElementById('section-results').style.display = 'block';
-      document.getElementById('res-header-title').innerText = `2. Risultato per [${categoryCode}] a ${city}`;
-      document.getElementById('res-station-name').innerText = `Stazione: ${stationObj.name}`;
-      document.getElementById('res-price-detected').innerText = `Prezzo Rilevato: $${detectedPrice}/gg`;
-      document.getElementById('res-price-avg').innerText = `Media Storica della Categoria: $${historicalAvg}/gg`;
-      document.getElementById('res-badge').innerText = `${diffPct}% SOTTO LA MEDIA`;
+      document.getElementById('res-category-code').innerText = `2. Risultati per [${categoryCode}]`;
+      document.getElementById('res-city-name').innerText = city;
 
-      showToast(`Confronto prezzi avviato per [${categoryCode}] a ${stationObj.name}!`);
+      const listElem = document.getElementById('results-list');
+      listElem.innerHTML = displayedStations.map(st => {
+        const diffPct = (((st.currentPrice - st.avgPrice) / st.avgPrice) * 100).toFixed(1);
+        const isGood = st.currentPrice <= st.avgPrice;
+        const badgeClass = isGood ? 'badge-good' : 'badge-bad';
+        const badgeText = isGood ? `${diffPct}% SOTTO LA MEDIA` : `+${diffPct}% SOPRA LA MEDIA`;
+
+        return `
+          <div class="result-card">
+            <div>
+              <div style="font-size: 12px; font-weight: 800; color: #FFF">${st.name}</div>
+              <div style="font-size: 10px; color: #8E8E93; margin-top: 2px;">
+                Prezzo Attuale: <strong style="color: #FF5F00">$${st.currentPrice}/gg</strong> (Media: $${st.avgPrice}/gg)
+              </div>
+            </div>
+            <div class="${badgeClass}">${badgeText}</div>
+          </div>
+        `;
+      }).join('');
+
+      showToast(`Confronto prezzi mostrato per stazioni di ${city}!`);
     }
 
     function showToast(msg) {
@@ -456,9 +462,8 @@
 
       setTimeout(() => {
         const categoryCode = document.getElementById('select-category').value || 'CLMR/CLAR';
-        const categoryObj = ACRISS_CATEGORIES.find(c => c.code === categoryCode) || ACRISS_CATEGORIES[0];
-        const avg = categoryObj.baseAvg || 48;
-        const simPrice = Math.round(avg * (0.8 + Math.random() * 0.3));
+        const allCityStations = CITY_STATIONS_MAP[selectedCity] || [];
+        const simPrice = Math.floor(Math.random() * (45 - 32 + 1)) + 32;
         const time = new Date().toLocaleTimeString();
 
         const logsContent = document.getElementById('logs-content');
@@ -468,17 +473,16 @@
         item.innerHTML = `<div style="display:flex; justify-content:space-between; color:#FFF">
           <span>Cron Check Completed</span> <span>${time}</span>
         </div>
-        <div style="color:#FF5F00">→ [${categoryCode}] ${selectedCity}: Detected $${simPrice}/gg (Avg: $${avg}/gg) [Jitter: ${randomJitter}ms]</div>`;
+        <div style="color:#FF5F00">→ [${categoryCode}] ${allCityStations[0]?.name || selectedCity}: Detected $${simPrice}/gg [Jitter: ${randomJitter}ms]</div>`;
 
         logsContent.prepend(item);
 
-        showToast(`Ciclo Cron completato! Prezzo rilevato: $${simPrice}/gg`);
-        btn.innerText = `⚡ TEST MOTORE CLOUD CRON ([${categoryCode}] ${selectedCity.toUpperCase()})`;
+        showToast(`Ciclo Cron completato per ${selectedCity}! Prezzo rilevato: $${simPrice}/gg`);
+        btn.innerText = `⚡ TEST MOTORE CLOUD CRON (${selectedCity.toUpperCase()})`;
         btn.disabled = false;
       }, randomJitter);
     }
 
-    // Initial render
     initUI();
   </script>
 </body>
