@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SIXT WEB TRACKER - Apple Cyber-Dark Dashboard</title>
+  <title>SIXT WEB TRACKER - Full ACRISS Category List & Vehicle Models</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -60,7 +60,7 @@
 
     .card {
       width: 100%;
-      max-width: 440px;
+      max-width: 460px;
       background-color: var(--card-bg);
       border: 1px solid var(--card-border);
       border-radius: 24px;
@@ -73,7 +73,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
     }
 
     .title {
@@ -132,7 +132,7 @@
       background: rgba(255, 255, 255, 0.04);
       padding: 4px;
       border-radius: 12px;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
       border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
@@ -159,7 +159,7 @@
     .form-group {
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 12px;
     }
 
     .form-row {
@@ -181,7 +181,7 @@
       margin-bottom: 4px;
     }
 
-    input {
+    input, select {
       width: 100%;
       background-color: rgba(255, 255, 255, 0.06);
       border: 1px solid rgba(255, 255, 255, 0.12);
@@ -193,7 +193,11 @@
       transition: all 0.2s ease;
     }
 
-    input:focus {
+    select {
+      background-color: #16161c;
+    }
+
+    input:focus, select:focus {
       border-color: var(--sixt-orange);
       box-shadow: 0 0 10px rgba(255, 95, 0, 0.3);
     }
@@ -204,7 +208,7 @@
       border-radius: 12px;
       padding: 12px 16px;
       display: flex;
-      justify-content: space-between;
+      flex-direction: column;
       margin-top: 6px;
     }
 
@@ -225,7 +229,7 @@
       font-weight: 800;
       cursor: pointer;
       box-shadow: 0 4px 20px rgba(255, 95, 0, 0.35);
-      margin-top: 10px;
+      margin-top: 8px;
       width: 100%;
       transition: transform 0.15s ease;
     }
@@ -275,7 +279,7 @@
         <h1 class="title">SIXT <span>WEB TRACKER</span></h1>
         <div class="subtitle-wrapper">
           <span class="pulse-dot-orange"></span>
-          <p id="sub-title-text" class="subtitle">Monitoraggio Cloud automatico (Check ogni 4-5 ore)</p>
+          <p id="sub-title-text" class="subtitle">Cloud Tracker H24 - Notifiche Email & Codici ACRISS</p>
         </div>
       </div>
       <button id="lang-btn" class="lang-btn" onclick="toggleLang()">🇮🇹 IT</button>
@@ -291,11 +295,64 @@
 
     <!-- Form -->
     <div class="form-group">
+      
+      <!-- Stazioni Dropdown -->
       <div>
-        <label id="lbl-location">LUOGO RITIRO</label>
-        <input type="text" id="input-location" placeholder="es. Monaco Aeroporto..." oninput="updateSlotData()">
+        <label id="lbl-location">SELEZIONA LUOGO DI RITIRO</label>
+        <select id="select-location" onchange="updateSlotData()">
+          <option value="">-- Scegli una stazione Sixt --</option>
+          <option value="DE123">Monaco di Baviera Aeroporto (MUC)</option>
+          <option value="IT456">Milano Malpensa Aeroporto (MXP)</option>
+          <option value="IT789">Roma Fiumicino Aeroporto (FCO)</option>
+          <option value="DE999">Berlino Aeroporto (BER)</option>
+          <option value="AT111">Vienna Aeroporto (VIE)</option>
+        </select>
       </div>
 
+      <!-- Categorie ACRISS Dropdown -->
+      <div>
+        <label id="lbl-category">SELEZIONA CATEGORIA / CODICE ACRISS</label>
+        <select id="select-category" onchange="updateSlotData()">
+          <option value="">-- Scegli la categoria ACRISS --</option>
+          <option value="MCMR">[MCMR] Berlina - Citroën C1 (Manuale) - 2P/3D</option>
+          <option value="ECMR">[ECMR] Berlina - Fiat 500 (Manuale) - 4P/3D</option>
+          <option value="EDMR">[EDMR] Berlina - VW Polo (Manuale) - 5P/5D</option>
+          <option value="CCMR/CCAR">[CCMR/CCAR] Berlina Premium - MINI Hatch (Man/Auto) - 4P/3D</option>
+          <option value="CDMR">[CDMR] Berlina - Fiat Tipo (Manuale) - 5P/5D</option>
+          <option value="CLMR/CLAR">[CLMR/CLAR] Berlina Premium - VW Golf (Man/Auto) - 5P/5D</option>
+          <option value="CWMR">[CWMR] Station Wagon - Fiat Tipo SW (Manuale) - 5P/5D</option>
+          <option value="IDMR/IDAR">[IDMR/IDAR] Berlina Premium - Alfa Romeo Giulietta (Man/Auto) - 5P/5D</option>
+          <option value="ILMR/ILAR">[ILMR/ILAR] Berlina Premium - BMW Serie 1 (Man/Auto) - 5P/5D</option>
+          <option value="SDMR/SDAR">[SDMR/SDAR] Berlina Premium - BMW Serie 2 Active Tourer (Man/Auto) - 5P/5D</option>
+          <option value="SWAR">[SWAR] Station Wagon Premium - BMW Serie 2 Grand Tourer (Auto) - 5P/5D</option>
+          <option value="FDAR">[FDAR] Berlina Premium - Alfa Romeo Giulia (Auto) - 5P/5D</option>
+          <option value="FWAR">[FWAR] Station Wagon Premium - BMW Serie 3 Touring (Auto) - 5P/5D</option>
+          <option value="PDAR">[PDAR] Berlina Premium - Audi A5 Sportback (Auto) - 5P/5D</option>
+          <option value="LDAR">[LDAR] Berlina Premium - BMW Serie 5 (Auto) - 5P/5D</option>
+          <option value="LWAR">[LWAR] Station Wagon Premium - BMW Serie 5 Touring (Auto) - 5P/5D</option>
+          <option value="XCAR">[XCAR] Berlina Premium - BMW Serie 6 GT (Auto) - 5P/5D</option>
+          <option value="XDAR">[XDAR] Berlina Premium - BMW Serie 7 (Auto) - 5P/5D</option>
+          <option value="XSAR">[XSAR] Berlina Premium - BMW Serie 8 (Auto) - 5P/5D</option>
+          <option value="FSAR">[FSAR] Coupé Premium - BMW Serie 2 Coupé (Auto) - 4P/3D</option>
+          <option value="LSAR">[LSAR] Coupé Premium - BMW Serie 4 Gran Coupé (Auto) - 5P/5D</option>
+          <option value="CVMR">[CVMR] Minivan - Fiat Qubo (Manuale) - 5P/5D</option>
+          <option value="IVAR">[IVAR] Minivan - VW Touran 7S (Auto) - 7P/5D</option>
+          <option value="SVAR">[SVAR] Minivan - Peugeot 5008 (Auto) - 7P/5D</option>
+          <option value="FVMR/FVAR">[FVMR/FVAR] Minivan - Fiat Talento (Man/Auto) - 9P/5D</option>
+          <option value="CTMR/CTAR">[CTMR/CTAR] Cabriolet - Fiat 500C (Man/Auto) - 4P/3D</option>
+          <option value="STAR">[STAR] Cabriolet - BMW Serie 2 Cabrio (Auto) - 4P/3D</option>
+          <option value="LTAR">[LTAR] Cabriolet - BMW Serie 4 Cabrio (Auto) - 4P/3D</option>
+          <option value="PTAR">[PTAR] Cabriolet - BMW Z4 (Auto) - 2P/3D</option>
+          <option value="CFMR">[CFMR] Fuoristrada / SUV - Fiat 500X (Manuale) - 5P/5D</option>
+          <option value="IFMR/IFAR">[IFMR/IFAR] Fuoristrada / SUV - Jeep Renegade (Man/Auto) - 5P/5D</option>
+          <option value="SFMR/SFAR">[SFMR/SFAR] Fuoristrada / SUV - Ford Kuga (Man/Auto) - 5P/5D</option>
+          <option value="FFAR">[FFAR] Fuoristrada / SUV - BMW X1 (Auto) - 5P/5D</option>
+          <option value="PFAR">[PFAR] Fuoristrada / SUV - Jaguar I-Pace (Auto) - 5P/5D</option>
+          <option value="XFAR">[XFAR] Fuoristrada / SUV - BMW X5 (Auto) - 5P/5D</option>
+        </select>
+      </div>
+
+      <!-- Dates -->
       <div class="form-row">
         <div class="field">
           <label id="lbl-start">DATA INIZIO</label>
@@ -307,30 +364,41 @@
         </div>
       </div>
 
+      <!-- Flair & Email -->
       <div class="form-row">
-        <div class="field">
-          <label id="lbl-category">CATEGORIA / MODELLO</label>
-          <input type="text" id="input-category" placeholder="es. CLA, SUV" oninput="updateSlotData()">
-        </div>
-        <div class="field">
+        <div class="field" style="flex: 1;">
           <label id="lbl-flair">FLAIR MAX ($)</label>
           <input type="number" id="input-flair" placeholder="es. 70" oninput="updateSlotData()">
         </div>
+        <div class="field" style="flex: 1.5;">
+          <label id="lbl-email">EMAIL PER NOTIFICHE ALERT</label>
+          <input type="email" id="input-email" placeholder="nome@email.com" oninput="updateSlotData()">
+        </div>
       </div>
 
-      <!-- Stats -->
+      <!-- Stats Box & SVG Graph -->
       <div class="stats-box">
-        <div>
-          <div id="lbl-last" style="font-size: 9px; color: #8E8E93;">ULTIMO RILEVATO</div>
-          <div id="val-last" class="stats-val">$ 62</div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <div>
+            <div id="lbl-last" style="font-size: 9px; color: #8E8E93;">ULTIMO RILEVATO</div>
+            <div id="val-last" class="stats-val">$ 71</div>
+          </div>
+          <div style="text-align: right;">
+            <div id="lbl-avg" style="font-size: 9px; color: #8E8E93;">MEDIA STORICA</div>
+            <div id="val-avg" class="stats-val">$ 78.20</div>
+          </div>
         </div>
-        <div style="text-align: right;">
-          <div id="lbl-avg" style="font-size: 9px; color: #8E8E93;">MEDIA STORICA</div>
-          <div id="val-avg" class="stats-val">$ 66.40</div>
+
+        <div id="chart-container" style="margin-top: 6px;">
+          <div id="lbl-chart" style="font-size: 8px; color: #8E8E93; margin-bottom: 4px;">Trend Prezzi Categoria ($)</div>
+          <svg width="100%" height="40" viewBox="0 0 300 40" style="overflow: visible;">
+            <path id="svg-path" d="" fill="none" stroke="#FF5F00" stroke-width="2"/>
+            <g id="svg-dots"></g>
+          </svg>
         </div>
       </div>
 
-      <button id="btn-save" class="btn-primary" onclick="saveSlot()">SALVA E ATTIVA NEL CLOUD</button>
+      <button id="btn-save" class="btn-primary" onclick="saveSlot()">SALVA E ATTIVA NOTIFICHE EMAIL</button>
       <button id="btn-cron" class="btn-secondary" onclick="runManualCron()">⚡ ESEGUI TEST CRON (4-5H LOGIC)</button>
 
       <div style="text-align: center; margin-top: 4px;">
@@ -355,40 +423,44 @@
     let currentSlotIdx = 0;
 
     const slots = [
-      { id: 'slot_1', active: true, location: 'Monaco Aeroporto', startDate: '2026-08-10', endDate: '2026-08-17', category: 'CLA Shooting Brake', maxPriceFlair: 70, lastPrice: 62, avgPrice: 66.40 },
-      { id: 'slot_2', active: false, location: 'Milano Malpensa', startDate: '2026-09-01', endDate: '2026-09-05', category: 'BMW Serie 3', maxPriceFlair: 85, lastPrice: null, avgPrice: null },
-      { id: 'slot_3', active: false, location: 'Roma Fiumicino', startDate: '2026-10-12', endDate: '2026-10-19', category: 'Audi A4 Avant', maxPriceFlair: 75, lastPrice: null, avgPrice: null },
-      { id: 'slot_4', active: false, location: 'Zurigo Aeroporto', startDate: '2026-11-20', endDate: '2026-11-25', category: 'Porsche Macan', maxPriceFlair: 120, lastPrice: null, avgPrice: null }
+      { id: 'slot_1', location: 'DE123', category: 'LSAR', startDate: '2026-08-10', endDate: '2026-08-17', maxPrice: '85', email: 'utente@email.com', history: [85, 82, 79, 74, 71] },
+      { id: 'slot_2', location: 'IT456', category: 'XFAR', startDate: '2026-09-01', endDate: '2026-09-05', maxPrice: '140', email: 'utente@email.com', history: [140, 135, 128, 130, 122] },
+      { id: 'slot_3', location: '', category: '', startDate: '', endDate: '', maxPrice: '', email: '', history: [] },
+      { id: 'slot_4', location: '', category: '', startDate: '', endDate: '', maxPrice: '', email: '', history: [] }
     ];
 
     const i18n = {
       IT: {
-        subtitle: "Monitoraggio Cloud automatico (Check ogni 4-5 ore)",
-        location: "LUOGO RITIRO",
+        subtitle: "Cloud Tracker H24 - Notifiche Email & Codici ACRISS",
+        location: "SELEZIONA LUOGO DI RITIRO",
+        category: "SELEZIONA CATEGORIA / CODICE ACRISS",
         start: "DATA INIZIO",
         end: "DATA FINE",
-        category: "CATEGORIA / MODELLO",
         flair: "FLAIR MAX ($)",
+        email: "EMAIL PER NOTIFICHE ALERT",
         lastPrice: "ULTIMO RILEVATO",
         avgPrice: "MEDIA STORICA",
-        saveBtn: "SALVA E ATTIVA NEL CLOUD",
+        chartTitle: "Trend Prezzi Categoria ($)",
+        saveBtn: "SALVA E ATTIVA NOTIFICHE EMAIL",
         cronBtn: "⚡ ESEGUI TEST CRON (4-5H LOGIC)",
-        savedAlert: "Slot attivato! Il Cloud controllerà i prezzi ogni 4-5 ore e ti invierà un'email in caso di ribassi.",
+        savedAlert: "Slot attivato! Riceverai un'email ogni volta che il prezzo della categoria scende sotto la media.",
         viewLogs: "▼ Mostra Log Cloud",
         hideLogs: "▲ Nascondi Log Cloud"
       },
       EN: {
-        subtitle: "Automatic Cloud Tracking (Check every 4-5 hours)",
-        location: "PICKUP LOCATION",
+        subtitle: "24/7 Cloud Tracker - Email Alerts & ACRISS Codes",
+        location: "SELECT PICKUP LOCATION",
+        category: "SELECT CAR CATEGORY / ACRISS CODE",
         start: "START DATE",
         end: "END DATE",
-        category: "CATEGORY / MODEL",
         flair: "MAX FLAIR ($)",
+        email: "EMAIL FOR PRICE ALERTS",
         lastPrice: "LAST DETECTED",
         avgPrice: "AVERAGE PRICE",
-        saveBtn: "SAVE TO CLOUD TRACKER",
+        chartTitle: "Category Price Trend ($)",
+        saveBtn: "SAVE & ENABLE EMAIL ALERTS",
         cronBtn: "⚡ RUN MANUAL CRON CHECK",
-        savedAlert: "Slot activated! The Cloud will check prices every 4-5 hours and email you when prices drop.",
+        savedAlert: "Slot activated! You will receive an email whenever the category price drops below average.",
         viewLogs: "▼ View Cloud Logs",
         hideLogs: "▲ Hide Cloud Logs"
       }
@@ -402,23 +474,32 @@
       document.getElementById('lang-btn').innerText = currentLang === 'IT' ? '🇮🇹 IT' : '🇬🇧 EN';
 
       document.getElementById('lbl-location').innerText = t.location;
+      document.getElementById('lbl-category').innerText = t.category;
       document.getElementById('lbl-start').innerText = t.start;
       document.getElementById('lbl-end').innerText = t.end;
-      document.getElementById('lbl-category').innerText = t.category;
       document.getElementById('lbl-flair').innerText = t.flair;
+      document.getElementById('lbl-email').innerText = t.email;
       document.getElementById('lbl-last').innerText = t.lastPrice;
       document.getElementById('lbl-avg').innerText = t.avgPrice;
+      document.getElementById('lbl-chart').innerText = t.chartTitle;
       document.getElementById('btn-save').innerText = t.saveBtn;
       document.getElementById('btn-cron').innerText = t.cronBtn;
 
-      document.getElementById('input-location').value = s.location || '';
+      document.getElementById('select-location').value = s.location || '';
+      document.getElementById('select-category').value = s.category || '';
       document.getElementById('input-start').value = s.startDate || '';
       document.getElementById('input-end').value = s.endDate || '';
-      document.getElementById('input-category').value = s.category || '';
-      document.getElementById('input-flair').value = s.maxPriceFlair || '';
+      document.getElementById('input-flair').value = s.maxPrice || '';
+      document.getElementById('input-email').value = s.email || '';
 
-      document.getElementById('val-last').innerText = s.lastPrice ? `$ ${s.lastPrice}` : '$ --';
-      document.getElementById('val-avg').innerText = s.avgPrice ? `$ ${s.avgPrice}` : '$ --';
+      const history = s.history || [];
+      const lastPrice = history.length > 0 ? history[history.length - 1] : null;
+      const avgPrice = history.length > 0 ? (history.reduce((a, b) => a + b, 0) / history.length).toFixed(2) : null;
+
+      document.getElementById('val-last').innerText = lastPrice ? `$ ${lastPrice}` : '$ --';
+      document.getElementById('val-avg').innerText = avgPrice ? `$ ${avgPrice}` : '$ --';
+
+      renderSvgChart(history);
 
       for (let i = 0; i < 4; i++) {
         const tab = document.getElementById(`tab-${i}`);
@@ -430,6 +511,47 @@
       }
     }
 
+    function renderSvgChart(data) {
+      const container = document.getElementById('chart-container');
+      if (!data || data.length === 0) {
+        container.style.display = 'none';
+        return;
+      }
+      container.style.display = 'block';
+
+      const pathElem = document.getElementById('svg-path');
+      const dotsElem = document.getElementById('svg-dots');
+
+      const width = 300;
+      const height = 40;
+
+      if (data.length === 1) {
+        pathElem.setAttribute('d', `M 0 ${height/2} L ${width} ${height/2}`);
+        dotsElem.innerHTML = `<circle cx="${width/2}" cy="${height/2}" r="3" fill="#FF5F00" />`;
+        return;
+      }
+
+      const min = Math.min(...data);
+      const max = Math.max(...data);
+      const range = max - min || 1;
+
+      const pathPoints = data.map((val, idx) => {
+        const x = (idx / (data.length - 1)) * width;
+        const y = height - ((val - min) / range) * (height - 10) - 5;
+        return `${idx === 0 ? 'M' : 'L'} ${x} ${y}`;
+      }).join(' ');
+
+      pathElem.setAttribute('d', pathPoints);
+
+      let dotsHtml = '';
+      data.forEach((val, idx) => {
+        const x = (idx / (data.length - 1)) * width;
+        const y = height - ((val - min) / range) * (height - 10) - 5;
+        dotsHtml += `<circle cx="${x}" cy="${y}" r="3" fill="#FF5F00" />`;
+      });
+      dotsElem.innerHTML = dotsHtml;
+    }
+
     function switchSlot(idx) {
       currentSlotIdx = idx;
       renderUI();
@@ -437,15 +559,15 @@
 
     function updateSlotData() {
       const s = slots[currentSlotIdx];
-      s.location = document.getElementById('input-location').value;
+      s.location = document.getElementById('select-location').value;
+      s.category = document.getElementById('select-category').value;
       s.startDate = document.getElementById('input-start').value;
       s.endDate = document.getElementById('input-end').value;
-      s.category = document.getElementById('input-category').value;
-      s.maxPriceFlair = document.getElementById('input-flair').value;
+      s.maxPrice = document.getElementById('input-flair').value;
+      s.email = document.getElementById('input-email').value;
     }
 
     function saveSlot() {
-      slots[currentSlotIdx].active = true;
       showToast(i18n[currentLang].savedAlert);
     }
 
@@ -485,10 +607,7 @@
       setTimeout(() => {
         const newPrice = Math.floor(Math.random() * (85 - 42 + 1)) + 42;
         const s = slots[currentSlotIdx];
-        const prev = s.lastPrice || 66;
-        s.lastPrice = newPrice;
-        s.avgPrice = parseFloat(((prev + newPrice) / 2).toFixed(2));
-        s.active = true;
+        s.history = [...(s.history || [80, 75]), newPrice];
 
         renderUI();
 
@@ -496,10 +615,13 @@
         const time = new Date().toLocaleTimeString();
         const item = document.createElement('div');
         item.className = 'log-item';
+        
+        const avg = (s.history.reduce((a,b)=>a+b,0)/s.history.length).toFixed(2);
+
         item.innerHTML = `<div style="display:flex; justify-content:space-between; color:#FFF">
           <span>Cron Check Completed</span> <span>${time}</span>
         </div>
-        <div style="color:#FF5F00">→ ${s.location}: Detected $${newPrice} (Avg: $${s.avgPrice}) [Anti-Pattern Jitter: ${randomJitter}ms]</div>`;
+        <div style="color:#FF5F00">→ Category [${s.category || 'LSAR'}]: Detected $${newPrice} (Avg: $${avg}) [Jitter: ${randomJitter}ms]</div>`;
 
         logsContent.prepend(item);
 
@@ -509,7 +631,6 @@
       }, randomJitter);
     }
 
-    // Initialize UI
     renderUI();
   </script>
 </body>

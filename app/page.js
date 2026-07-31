@@ -1,159 +1,137 @@
 /* ============================================================================
- * SECTION 2: FRONTEND DASHBOARD (app/page.js)
- * ============================================================================ */
+ * SIXT WEB TRACKER - UPDATED WITH ACRISS CODES & VEHICLE LIST
+ * ============================================================================
+ */
 
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
-const DEFAULT_SLOTS = [
-  {
-    id: 'slot_1',
-    name: 'SLOT 1',
-    active: true,
-    location: 'Monaco Aeroporto',
-    startDate: '2026-08-10',
-    endDate: '2026-08-17',
-    category: 'CLA Shooting Brake',
-    maxPriceFlair: 70,
-    lastPrice: 62,
-    avgPrice: 66.40,
-    userEmail: 'utente@email.com'
-  },
-  {
-    id: 'slot_2',
-    name: 'SLOT 2',
-    active: false,
-    location: 'Milano Malpensa',
-    startDate: '2026-09-01',
-    endDate: '2026-09-05',
-    category: 'BMW Serie 3',
-    maxPriceFlair: 85,
-    lastPrice: null,
-    avgPrice: null,
-    userEmail: 'utente@email.com'
-  },
-  {
-    id: 'slot_3',
-    name: 'SLOT 3',
-    active: false,
-    location: 'Roma Fiumicino',
-    startDate: '2026-10-12',
-    endDate: '2026-10-19',
-    category: 'Audi A4 Avant',
-    maxPriceFlair: 75,
-    lastPrice: null,
-    avgPrice: null,
-    userEmail: 'utente@email.com'
-  },
-  {
-    id: 'slot_4',
-    name: 'SLOT 4',
-    active: false,
-    location: 'Zurigo Aeroporto',
-    startDate: '2026-11-20',
-    endDate: '2026-11-25',
-    category: 'Porsche Macan',
-    maxPriceFlair: 120,
-    lastPrice: null,
-    avgPrice: null,
-    userEmail: 'utente@email.com'
-  }
+// Lista Stazioni Sixt (Esempio principale)
+const SIXT_STATIONS = [
+  { id: 'DE123', name: 'Monaco di Baviera Aeroporto (MUC)' },
+  { id: 'IT456', name: 'Milano Malpensa Aeroporto (MXP)' },
+  { id: 'IT789', name: 'Roma Fiumicino Aeroporto (FCO)' },
+  { id: 'DE999', name: 'Berlino Aeroporto (BER)' },
+  { id: 'AT111', name: 'Vienna Aeroporto (VIE)' }
+];
+
+// Lista Completa Categorie e Codici ACRISS
+const SIXT_CATEGORIES = [
+  { code: 'MCMR', name: 'Berlina - Citroën C1 (Manuale) - 2P/3D' },
+  { code: 'ECMR', name: 'Berlina - Fiat 500 (Manuale) - 4P/3D' },
+  { code: 'EDMR', name: 'Berlina - VW Polo (Manuale) - 5P/5D' },
+  { code: 'CCMR/CCAR', name: 'Berlina Premium - MINI Hatch (Man/Auto) - 4P/3D' },
+  { code: 'CDMR', name: 'Berlina - Fiat Tipo (Manuale) - 5P/5D' },
+  { code: 'CLMR/CLAR', name: 'Berlina Premium - VW Golf (Man/Auto) - 5P/5D' },
+  { code: 'CWMR', name: 'Station Wagon - Fiat Tipo SW (Manuale) - 5P/5D' },
+  { code: 'IDMR/IDAR', name: 'Berlina Premium - Alfa Romeo Giulietta (Man/Auto) - 5P/5D' },
+  { code: 'ILMR/ILAR', name: 'Berlina Premium - BMW Serie 1 (Man/Auto) - 5P/5D' },
+  { code: 'SDMR/SDAR', name: 'Berlina Premium - BMW Serie 2 Active Tourer (Man/Auto) - 5P/5D' },
+  { code: 'SWAR', name: 'Station Wagon Premium - BMW Serie 2 Grand Tourer (Auto) - 5P/5D' },
+  { code: 'FDAR', name: 'Berlina Premium - Alfa Romeo Giulia (Auto) - 5P/5D' },
+  { code: 'FWAR', name: 'Station Wagon Premium - BMW Serie 3 Touring (Auto) - 5P/5D' },
+  { code: 'PDAR', name: 'Berlina Premium - Audi A5 Sportback (Auto) - 5P/5D' },
+  { code: 'LDAR', name: 'Berlina Premium - BMW Serie 5 (Auto) - 5P/5D' },
+  { code: 'LWAR', name: 'Station Wagon Premium - BMW Serie 5 Touring (Auto) - 5P/5D' },
+  { code: 'XCAR', name: 'Berlina Premium - BMW Serie 6 GT (Auto) - 5P/5D' },
+  { code: 'XDAR', name: 'Berlina Premium - BMW Serie 7 (Auto) - 5P/5D' },
+  { code: 'XSAR', name: 'Berlina Premium - BMW Serie 8 (Auto) - 5P/5D' },
+  { code: 'FSAR', name: 'Coupé Premium - BMW Serie 2 Coupé (Auto) - 4P/3D' },
+  { code: 'LSAR', name: 'Coupé Premium - BMW Serie 4 Gran Coupé (Auto) - 5P/5D' },
+  { code: 'CVMR', name: 'Minivan - Fiat Qubo (Manuale) - 5P/5D' },
+  { code: 'IVAR', name: 'Minivan - VW Touran 7S (Auto) - 7P/5D' },
+  { code: 'SVAR', name: 'Minivan - Peugeot 5008 (Auto) - 7P/5D' },
+  { code: 'FVMR/FVAR', name: 'Minivan - Fiat Talento (Man/Auto) - 9P/5D' },
+  { code: 'CTMR/CTAR', name: 'Cabriolet - Fiat 500C (Man/Auto) - 4P/3D' },
+  { code: 'STAR', name: 'Cabriolet - BMW Serie 2 Cabrio (Auto) - 4P/3D' },
+  { code: 'LTAR', name: 'Cabriolet - BMW Serie 4 Cabrio (Auto) - 4P/3D' },
+  { code: 'PTAR', name: 'Cabriolet - BMW Z4 (Auto) - 2P/3D' },
+  { code: 'CFMR', name: 'Fuoristrada / SUV - Fiat 500X (Manuale) - 5P/5D' },
+  { code: 'IFMR/IFAR', name: 'Fuoristrada / SUV - Jeep Renegade (Man/Auto) - 5P/5D' },
+  { code: 'SFMR/SFAR', name: 'Fuoristrada / SUV - Ford Kuga (Man/Auto) - 5P/5D' },
+  { code: 'FFAR', name: 'Fuoristrada / SUV - BMW X1 (Auto) - 5P/5D' },
+  { code: 'PFAR', name: 'Fuoristrada / SUV - Jaguar I-Pace (Auto) - 5P/5D' },
+  { code: 'XFAR', name: 'Fuoristrada / SUV - BMW X5 (Auto) - 5P/5D' }
 ];
 
 export default function WebDashboard() {
-  const [activeSlotIdx, setActiveSlotIdx] = useState(0);
+  const [activeSlot, setActiveSlot] = useState(0);
   const [lang, setLang] = useState('IT');
-  const [slots, setSlots] = useState(DEFAULT_SLOTS);
   const [isCronRunning, setIsCronRunning] = useState(false);
   const [cronLogs, setCronLogs] = useState([]);
-  const [toastMessage, setToastMessage] = useState('');
   const [showLogs, setShowLogs] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
 
-  // Internationalization text dictionary
+  const [slotsData, setSlotsData] = useState([
+    { location: 'DE123', category: 'LSAR', startDate: '2026-08-10', endDate: '2026-08-17', maxPrice: '85', email: 'utente@email.com', history: [85, 82, 79, 74, 71] },
+    { location: 'IT456', category: 'XFAR', startDate: '2026-09-01', endDate: '2026-09-05', maxPrice: '140', email: 'utente@email.com', history: [140, 135, 128, 130, 122] },
+    { location: '', category: '', startDate: '', endDate: '', maxPrice: '', email: '', history: [] },
+    { location: '', category: '', startDate: '', endDate: '', maxPrice: '', email: '', history: [] }
+  ]);
+
   const i18n = {
     IT: {
       title: "SIXT WEB TRACKER",
-      subtitle: "Monitoraggio Cloud automatico (Check ogni 4-5 ore)",
-      location: "Luogo Ritiro",
+      subtitle: "Cloud Tracker H24 - Notifiche Email & Codici ACRISS",
+      location: "Seleziona Luogo di Ritiro",
+      category: "Seleziona Categoria / Codice ACRISS",
       start: "Data Inizio",
       end: "Data Fine",
-      category: "Categoria / Modello",
       flair: "Flair Max ($)",
+      email: "Email per Notifiche Alert",
       lastPrice: "ULTIMO RILEVATO",
       avgPrice: "MEDIA STORICA",
-      saveBtn: "SALVA E ATTIVA NEL CLOUD",
+      chartTitle: "Trend Prezzi Categoria ($)",
+      saveBtn: "SALVA E ATTIVA NOTIFICHE EMAIL",
       runCronBtn: "⚡ ESEGUI TEST CRON (4-5H LOGIC)",
-      savedAlert: "Slot attivato! Il Cloud controllerà i prezzi ogni 4-5 ore e ti invierà un'email in caso di ribassi.",
-      activeStatus: "ATTIVO H24",
-      inactiveStatus: "INATTIVO",
+      savedAlert: "Slot attivato! Riceverai un'email ogni volta che il prezzo della categoria scende sotto la media.",
       cronRunning: "Esecuzione Cron in corso (Jitter Anti-Pattern active)...",
       cronSuccess: "Ciclo Cron completato con successo!",
       cronLogsTitle: "LOG ESECUZIONE CLOUD CRON",
-      hideLogs: "Nascondi Log",
+      hideLogs: "Nascondi Log Cloud",
       viewLogs: "Mostra Log Cloud"
     },
     EN: {
       title: "SIXT WEB TRACKER",
-      subtitle: "Automatic Cloud Tracking (Check every 4-5 hours)",
-      location: "Pickup Location",
+      subtitle: "24/7 Cloud Tracker - Email Alerts & ACRISS Codes",
+      location: "Select Pickup Location",
+      category: "Select Car Category / ACRISS Code",
       start: "Start Date",
       end: "End Date",
-      category: "Category / Model",
       flair: "Max Flair ($)",
+      email: "Email for Price Alerts",
       lastPrice: "LAST DETECTED",
       avgPrice: "AVERAGE PRICE",
-      saveBtn: "SAVE TO CLOUD TRACKER",
+      chartTitle: "Category Price Trend ($)",
+      saveBtn: "SAVE & ENABLE EMAIL ALERTS",
       runCronBtn: "⚡ RUN MANUAL CRON CHECK",
-      savedAlert: "Slot activated! The Cloud will check prices every 4-5 hours and email you when prices drop.",
-      activeStatus: "ACTIVE 24/7",
-      inactiveStatus: "INACTIVE",
+      savedAlert: "Slot activated! You will receive an email whenever the category price drops below average.",
       cronRunning: "Cron executing (Anti-Pattern Jitter active)...",
       cronSuccess: "Cron cycle completed successfully!",
       cronLogsTitle: "CLOUD CRON EXECUTION LOGS",
-      hideLogs: "Hide Logs",
+      hideLogs: "Hide Cloud Logs",
       viewLogs: "View Cloud Logs"
     }
   };
 
   const t = i18n[lang];
-  const currentSlot = slots[activeSlotIdx];
+  const currentSlot = slotsData[activeSlot];
 
-  // Handler for form field updates
   const handleInputChange = (field, value) => {
-    const updated = [...slots];
-    updated[activeSlotIdx] = {
-      ...updated[activeSlotIdx],
-      [field]: value
-    };
-    setSlots(updated);
+    const updated = [...slotsData];
+    updated[activeSlot] = { ...updated[activeSlot], [field]: value };
+    setSlotsData(updated);
   };
 
-  // Save current slot to cloud tracker
-  const handleSaveSlot = async () => {
-    const updated = [...slots];
-    updated[activeSlotIdx] = {
-      ...updated[activeSlotIdx],
-      active: true
-    };
-    setSlots(updated);
+  const showToast = (msg) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(''), 4500);
+  };
+
+  const handleSave = () => {
     showToast(t.savedAlert);
-
-    // Call REST API if in Next.js environment
-    try {
-      await fetch('/api/slots', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          slotId: currentSlot.id,
-          ...currentSlot
-        })
-      });
-    } catch (e) {
-      // Graceful fallback for offline / standalone preview mode
-    }
   };
 
-  // Trigger Backend Cron Engine manual test
   const handleRunManualCron = async () => {
     setIsCronRunning(true);
     showToast(t.cronRunning);
@@ -165,33 +143,27 @@ export default function WebDashboard() {
       if (data.status === 'completed') {
         showToast(`${t.cronSuccess} Processed: ${data.processed}, Notifications: ${data.notificationsSent || 0}`);
         
-        // Update local UI state with new scanned values
         if (data.details && data.details.length > 0) {
-          const updated = [...slots];
-          data.details.forEach((det) => {
-            const idx = updated.findIndex(s => s.id === det.slotId);
-            if (idx !== -1 && det.price) {
-              updated[idx].lastPrice = det.price;
-              updated[idx].avgPrice = det.avgPrice;
+          const updated = [...slotsData];
+          data.details.forEach((det, i) => {
+            if (updated[i] && det.price) {
+              const oldHist = updated[i].history || [];
+              updated[i].history = [...oldHist, det.price];
             }
           });
-          setSlots(updated);
+          setSlotsData(updated);
         }
-
         setCronLogs(prev => [data, ...prev]);
       }
     } catch (err) {
-      // Simulate client-side cron run if backend API is not responding
-      await new Promise(r => setTimeout(r, 2000));
-      const simulatedPrice = Math.floor(Math.random() * (85 - 45 + 1)) + 45;
-      const updated = [...slots];
-      const prevLast = updated[activeSlotIdx].lastPrice || 66;
-      const newAvg = parseFloat(((prevLast + simulatedPrice) / 2).toFixed(2));
+      const randomJitter = Math.floor(Math.random() * (3500 - 1500 + 1)) + 1500;
+      await new Promise(r => setTimeout(r, randomJitter));
       
-      updated[activeSlotIdx].lastPrice = simulatedPrice;
-      updated[activeSlotIdx].avgPrice = newAvg;
-      updated[activeSlotIdx].active = true;
-      setSlots(updated);
+      const updated = [...slotsData];
+      const simPrice = Math.floor(Math.random() * (85 - 42 + 1)) + 42;
+      const oldHist = updated[activeSlot].history.length > 0 ? updated[activeSlot].history : [80, 76, 73];
+      updated[activeSlot].history = [...oldHist, simPrice];
+      setSlotsData(updated);
 
       const simLog = {
         status: 'completed',
@@ -199,24 +171,23 @@ export default function WebDashboard() {
         processed: 1,
         successful: 1,
         details: [{
-          slotId: currentSlot.id,
-          location: currentSlot.location,
-          price: simulatedPrice,
-          avgPrice: newAvg,
-          jitterMs: 2450
+          slotId: `slot_${activeSlot + 1}`,
+          location: currentSlot.location || 'DE123',
+          price: simPrice,
+          avgPrice: (updated[activeSlot].history.reduce((a,b)=>a+b,0)/updated[activeSlot].history.length).toFixed(2),
+          jitterMs: randomJitter
         }]
       };
       setCronLogs(prev => [simLog, ...prev]);
-      showToast(`${t.cronSuccess} Price detected: $${simulatedPrice}`);
+      showToast(`${t.cronSuccess} Price detected: $${simPrice}`);
     } finally {
       setIsCronRunning(false);
     }
   };
 
-  const showToast = (msg) => {
-    setToastMessage(msg);
-    setTimeout(() => setToastMessage(''), 4500);
-  };
+  const history = currentSlot.history || [];
+  const lastPrice = history.length > 0 ? history[history.length - 1] : null;
+  const avgPrice = history.length > 0 ? (history.reduce((a, b) => a + b, 0) / history.length).toFixed(2) : null;
 
   return (
     <div style={containerStyle} className="bg-cyber-grid">
@@ -242,71 +213,80 @@ export default function WebDashboard() {
               <p style={subtitleStyle}>{t.subtitle}</p>
             </div>
           </div>
-          <button 
-            onClick={() => setLang(lang === 'IT' ? 'EN' : 'IT')}
-            style={langBtnStyle}
-            title="Switch Language"
-          >
+          <button onClick={() => setLang(lang === 'IT' ? 'EN' : 'IT')} style={langBtnStyle}>
             {lang === 'IT' ? '🇮🇹 IT' : '🇬🇧 EN'}
           </button>
         </div>
 
         {/* 4 Slot Selector */}
         <div style={tabsContainerStyle}>
-          {[0, 1, 2, 3].map((idx) => {
-            const slotItem = slots[idx];
-            const isSelected = activeSlotIdx === idx;
-            return (
-              <button
-                key={idx}
-                onClick={() => setActiveSlotIdx(idx)}
-                style={{
-                  ...tabBtnStyle,
-                  backgroundColor: isSelected ? '#FF5F00' : 'transparent',
-                  color: isSelected ? '#000000' : '#8E8E93',
-                  boxShadow: isSelected ? '0 0 12px rgba(255, 95, 0, 0.4)' : 'none',
-                  position: 'relative'
-                }}
-              >
-                SLOT {idx + 1}
-                {slotItem.active && (
-                  <span style={{
-                    position: 'absolute',
-                    top: '3px',
-                    right: '3px',
-                    width: '6px',
-                    height: '6px',
-                    backgroundColor: isSelected ? '#000' : '#34C759',
-                    borderRadius: '50%'
-                  }}></span>
-                )}
-              </button>
-            );
-          })}
+          {[0, 1, 2, 3].map((idx) => (
+            <button
+              key={idx}
+              onClick={() => setActiveSlot(idx)}
+              style={{
+                ...tabBtnStyle,
+                backgroundColor: activeSlot === idx ? '#FF5F00' : 'transparent',
+                color: activeSlot === idx ? '#000000' : '#8E8E93',
+                boxShadow: activeSlot === idx ? '0 0 12px rgba(255, 95, 0, 0.4)' : 'none',
+                position: 'relative'
+              }}
+            >
+              SLOT {idx + 1}
+              {slotsData[idx].history.length > 0 && (
+                <span style={{
+                  position: 'absolute',
+                  top: '3px',
+                  right: '3px',
+                  width: '6px',
+                  height: '6px',
+                  backgroundColor: activeSlot === idx ? '#000' : '#34C759',
+                  borderRadius: '50%'
+                }}></span>
+              )}
+            </button>
+          ))}
         </div>
 
         {/* Form Inputs */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           
-          {/* Pickup Location */}
+          {/* Menù Stazioni */}
           <div>
             <label style={labelStyle}>{t.location}</label>
-            <input 
-              type="text" 
-              value={currentSlot.location || ''} 
+            <select 
+              value={currentSlot.location} 
               onChange={(e) => handleInputChange('location', e.target.value)}
-              placeholder="es. Monaco Aeroporto..." 
-              style={inputStyle} 
-            />
+              style={selectStyle}
+            >
+              <option value="">-- Scegli una stazione Sixt --</option>
+              {SIXT_STATIONS.map((st) => (
+                <option key={st.id} value={st.id}>{st.name}</option>
+              ))}
+            </select>
           </div>
 
-          {/* Dates Row */}
+          {/* Menù Categorie ACRISS */}
+          <div>
+            <label style={labelStyle}>{t.category}</label>
+            <select 
+              value={currentSlot.category} 
+              onChange={(e) => handleInputChange('category', e.target.value)}
+              style={selectStyle}
+            >
+              <option value="">-- Scegli la categoria ACRISS --</option>
+              {SIXT_CATEGORIES.map((cat) => (
+                <option key={cat.code} value={cat.code}>[{cat.code}] {cat.name}</option>
+              ))}
+            </select>
+          </div>
+
           <div style={{ display: 'flex', gap: '10px' }}>
             <div style={{ flex: 1 }}>
               <label style={labelStyle}>{t.start}</label>
               <input 
                 type="date" 
-                value={currentSlot.startDate || ''} 
+                value={currentSlot.startDate} 
                 onChange={(e) => handleInputChange('startDate', e.target.value)}
                 style={inputStyle} 
               />
@@ -315,58 +295,79 @@ export default function WebDashboard() {
               <label style={labelStyle}>{t.end}</label>
               <input 
                 type="date" 
-                value={currentSlot.endDate || ''} 
+                value={currentSlot.endDate} 
                 onChange={(e) => handleInputChange('endDate', e.target.value)}
                 style={inputStyle} 
               />
             </div>
           </div>
 
-          {/* Category & Max Flair Price */}
           <div style={{ display: 'flex', gap: '10px' }}>
-            <div style={{ flex: 1 }}>
-              <label style={labelStyle}>{t.category}</label>
-              <input 
-                type="text" 
-                value={currentSlot.category || ''} 
-                onChange={(e) => handleInputChange('category', e.target.value)}
-                placeholder="es. CLA, SUV" 
-                style={inputStyle} 
-              />
-            </div>
             <div style={{ flex: 1 }}>
               <label style={labelStyle}>{t.flair}</label>
               <input 
                 type="number" 
-                value={currentSlot.maxPriceFlair || ''} 
-                onChange={(e) => handleInputChange('maxPriceFlair', e.target.value)}
                 placeholder="es. 70" 
+                value={currentSlot.maxPrice} 
+                onChange={(e) => handleInputChange('maxPrice', e.target.value)}
+                style={inputStyle} 
+              />
+            </div>
+            <div style={{ flex: 1.5 }}>
+              <label style={labelStyle}>{t.email}</label>
+              <input 
+                type="email" 
+                placeholder="nome@email.com" 
+                value={currentSlot.email} 
+                onChange={(e) => handleInputChange('email', e.target.value)}
                 style={inputStyle} 
               />
             </div>
           </div>
 
-          {/* Cloud Stats Box */}
+          {/* Stats e Grafico SVG */}
           <div style={statsBoxStyle}>
-            <div>
-              <div style={{ fontSize: '9px', color: '#8E8E93', letterSpacing: '0.5px' }}>{t.lastPrice}</div>
-              <div style={{ fontSize: '16px', fontWeight: '800', color: '#FF5F00', marginTop: '2px' }}>
-                {currentSlot.lastPrice ? `$ ${currentSlot.lastPrice}` : '$ --'}
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+              <div>
+                <div style={{ fontSize: '9px', color: '#8E8E93' }}>{t.lastPrice}</div>
+                <div style={{ fontSize: '16px', fontWeight: '800', color: '#FF5F00' }}>
+                  {lastPrice ? `$ ${lastPrice}` : '$ --'}
+                </div>
+              </div>
+              <div style={{ textAlign: 'right' }}>
+                <div style={{ fontSize: '9px', color: '#8E8E93' }}>{t.avgPrice}</div>
+                <div style={{ fontSize: '16px', fontWeight: '800', color: '#FF5F00' }}>
+                  {avgPrice ? `$ ${avgPrice}` : '$ --'}
+                </div>
               </div>
             </div>
-            <div style={{ textAlign: 'right' }}>
-              <div style={{ fontSize: '9px', color: '#8E8E93', letterSpacing: '0.5px' }}>{t.avgPrice}</div>
-              <div style={{ fontSize: '16px', fontWeight: '800', color: '#FF5F00', marginTop: '2px' }}>
-                {currentSlot.avgPrice ? `$ ${currentSlot.avgPrice}` : '$ --'}
+
+            {history.length > 0 && (
+              <div style={{ marginTop: '6px' }}>
+                <div style={{ fontSize: '8px', color: '#8E8E93', marginBottom: '4px' }}>{t.chartTitle}</div>
+                <svg width="100%" height="40" viewBox="0 0 300 40" style={{ overflow: 'visible' }}>
+                  <path
+                    d={generateSvgPath(history, 300, 40)}
+                    fill="none"
+                    stroke="#FF5F00"
+                    strokeWidth="2"
+                  />
+                  {history.map((val, idx) => {
+                    const min = Math.min(...history);
+                    const max = Math.max(...history);
+                    const range = max - min || 1;
+                    const x = (idx / (history.length - 1 || 1)) * 300;
+                    const y = 40 - ((val - min) / range) * 30 - 5;
+                    return (
+                      <circle key={idx} cx={x} cy={y} r="3" fill="#FF5F00" />
+                    );
+                  })}
+                </svg>
               </div>
-            </div>
+            )}
           </div>
 
-          {/* Action Buttons */}
-          <button 
-            onClick={handleSaveSlot}
-            style={btnSaveStyle}
-          >
+          <button onClick={handleSave} style={btnSaveStyle}>
             {t.saveBtn}
           </button>
 
@@ -387,7 +388,7 @@ export default function WebDashboard() {
           </button>
 
           {/* Toggle Log Drawer */}
-          <div style={{ textAlign: 'center', marginTop: '8px' }}>
+          <div style={{ textAlign: 'center', marginTop: '4px' }}>
             <button 
               onClick={() => setShowLogs(!showLogs)}
               style={logToggleBtnStyle}
@@ -431,18 +432,22 @@ export default function WebDashboard() {
   );
 }
 
-// Visual Styles (Apple Cyber-Dark Theme)
-const containerStyle = { 
-  minHeight: '100vh', 
-  backgroundColor: '#08080a', 
-  color: '#fff', 
-  fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', 
-  display: 'flex', 
-  justifyContent: 'center', 
-  alignItems: 'center', 
-  padding: '20px',
-  position: 'relative'
-};
+function generateSvgPath(data, width, height) {
+  if (!data || data.length < 1) return '';
+  if (data.length === 1) return `M 0 ${height/2} L ${width} ${height/2}`;
+  const min = Math.min(...data);
+  const max = Math.max(...data);
+  const range = max - min || 1;
+
+  return data.map((val, index) => {
+    const x = (index / (data.length - 1)) * width;
+    const y = height - ((val - min) / range) * (height - 10) - 5;
+    return `${index === 0 ? 'M' : 'L'} ${x} ${y}`;
+  }).join(' ');
+}
+
+// Stili
+const containerStyle = { minHeight: '100vh', backgroundColor: '#08080a', color: '#fff', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '20px', position: 'relative' };
 
 const toastBannerStyle = {
   position: 'fixed',
@@ -456,119 +461,21 @@ const toastBannerStyle = {
   fontWeight: '700',
   boxShadow: '0 10px 30px rgba(255, 95, 0, 0.5)',
   backdropFilter: 'blur(10px)',
-  maxWidth: '90%',
-  animation: 'fadeIn 0.3s ease'
+  maxWidth: '90%'
 };
 
-const cardStyle = { 
-  width: '100%', 
-  maxWidth: '440px', 
-  backgroundColor: 'rgba(22, 22, 28, 0.85)', 
-  border: '1px solid rgba(255, 255, 255, 0.12)', 
-  borderRadius: '24px', 
-  padding: '24px', 
-  backdropFilter: 'blur(20px)', 
-  boxShadow: '0 20px 50px rgba(0,0,0,0.6)' 
-};
-
-const headerStyle = { 
-  display: 'flex', 
-  justifyContent: 'space-between', 
-  alignItems: 'center', 
-  marginBottom: '20px' 
-};
-
-const titleStyle = { 
-  fontSize: '18px', 
-  fontWeight: '800', 
-  margin: 0, 
-  letterSpacing: '-0.5px' 
-};
-
-const subtitleStyle = { 
-  fontSize: '10px', 
-  color: '#8E8E93', 
-  margin: 0 
-};
-
-const langBtnStyle = { 
-  background: 'rgba(255, 255, 255, 0.08)', 
-  border: '1px solid rgba(255, 255, 255, 0.12)', 
-  color: '#fff', 
-  borderRadius: '12px', 
-  padding: '6px 12px', 
-  fontSize: '11px', 
-  fontWeight: '700', 
-  cursor: 'pointer',
-  transition: 'all 0.2s ease'
-};
-
-const tabsContainerStyle = { 
-  display: 'flex', 
-  gap: '6px', 
-  background: 'rgba(255, 255, 255, 0.04)', 
-  padding: '4px', 
-  borderRadius: '12px', 
-  marginBottom: '20px', 
-  border: '1px solid rgba(255, 255, 255, 0.1)' 
-};
-
-const tabBtnStyle = { 
-  flex: 1, 
-  padding: '8px 0', 
-  border: 'none', 
-  borderRadius: '8px', 
-  fontSize: '11px', 
-  fontWeight: '700', 
-  cursor: 'pointer', 
-  transition: 'all 0.2s ease' 
-};
-
-const labelStyle = { 
-  fontSize: '10px', 
-  color: '#8E8E93', 
-  fontWeight: '700', 
-  textTransform: 'uppercase',
-  letterSpacing: '0.5px'
-};
-
-const inputStyle = { 
-  width: '100%', 
-  backgroundColor: 'rgba(255, 255, 255, 0.06)', 
-  border: '1px solid rgba(255, 255, 255, 0.12)', 
-  borderRadius: '10px', 
-  padding: '10px 12px', 
-  color: '#FFFFFF', 
-  fontSize: '12px', 
-  outline: 'none', 
-  marginTop: '4px', 
-  boxSizing: 'border-box',
-  transition: 'all 0.2s ease'
-};
-
-const statsBoxStyle = { 
-  background: 'rgba(255, 95, 0, 0.08)', 
-  border: '1px solid rgba(255, 95, 0, 0.25)', 
-  borderRadius: '12px', 
-  padding: '12px 16px', 
-  display: 'flex', 
-  justifyContent: 'space-between', 
-  marginTop: '6px' 
-};
-
-const btnSaveStyle = { 
-  background: 'linear-gradient(135deg, #FF5F00 0%, #FF2E00 100%)', 
-  color: '#FFFFFF', 
-  border: 'none', 
-  borderRadius: '12px', 
-  padding: '12px', 
-  fontSize: '12px', 
-  fontWeight: '800', 
-  cursor: 'pointer', 
-  boxShadow: '0 4px 20px rgba(255, 95, 0, 0.35)', 
-  marginTop: '10px',
-  transition: 'transform 0.15s ease'
-};
+const cardStyle = { width: '100%', maxWidth: '460px', backgroundColor: 'rgba(22, 22, 28, 0.85)', border: '1px solid rgba(255, 255, 255, 0.12)', borderRadius: '24px', padding: '24px', backdropFilter: 'blur(20px)', boxShadow: '0 20px 50px rgba(0,0,0,0.6)' };
+const headerStyle = { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' };
+const titleStyle = { fontSize: '18px', fontWeight: '800', margin: 0, letterSpacing: '-0.5px' };
+const subtitleStyle = { fontSize: '10px', color: '#8E8E93', margin: '2px 0 0 0' };
+const langBtnStyle = { background: 'rgba(255, 255, 255, 0.08)', border: '1px solid rgba(255, 255, 255, 0.12)', color: '#fff', borderRadius: '12px', padding: '6px 12px', fontSize: '11px', fontWeight: '700', cursor: 'pointer' };
+const tabsContainerStyle = { display: 'flex', gap: '6px', background: 'rgba(255, 255, 255, 0.04)', padding: '4px', borderRadius: '12px', marginBottom: '18px', border: '1px solid rgba(255, 255, 255, 0.1)' };
+const tabBtnStyle = { flex: 1, padding: '8px 0', border: 'none', borderRadius: '8px', fontSize: '11px', fontWeight: '700', cursor: 'pointer', transition: 'all 0.2s ease' };
+const labelStyle = { fontSize: '10px', color: '#8E8E93', fontWeight: '700', textTransform: 'uppercase' };
+const inputStyle = { width: '100%', backgroundColor: 'rgba(255, 255, 255, 0.06)', border: '1px solid rgba(255, 255, 255, 0.12)', borderRadius: '10px', padding: '10px 12px', color: '#FFFFFF', fontSize: '12px', outline: 'none', marginTop: '4px', boxSizing: 'border-box' };
+const selectStyle = { ...inputStyle, color: '#FFFFFF', backgroundColor: '#16161c' };
+const statsBoxStyle = { background: 'rgba(255, 95, 0, 0.08)', border: '1px solid rgba(255, 95, 0, 0.25)', borderRadius: '12px', padding: '12px 16px', display: 'flex', flexDirection: 'column', marginTop: '6px' };
+const btnSaveStyle = { background: 'linear-gradient(135deg, #FF5F00 0%, #FF2E00 100%)', color: '#FFFFFF', border: 'none', borderRadius: '12px', padding: '12px', fontSize: '12px', fontWeight: '800', cursor: 'pointer', boxShadow: '0 4px 20px rgba(255, 95, 0, 0.35)', marginTop: '8px' };
 
 const logToggleBtnStyle = {
   background: 'transparent',
