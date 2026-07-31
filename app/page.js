@@ -1,18 +1,48 @@
 /* ============================================================================
- * SIXT WEB TRACKER - UPDATED WITH ACRISS CODES & VEHICLE LIST
+ * SIXT WEB TRACKER - UPDATED WITH FULL STATIONS & ACRISS CODES
  * ============================================================================
  */
 
 'use client';
 import React, { useState } from 'react';
 
-// Lista Stazioni Sixt (Esempio principale)
+// Lista Punti di Ritiro e Stazioni Sixt Principali
 const SIXT_STATIONS = [
-  { id: 'DE123', name: 'Monaco di Baviera Aeroporto (MUC)' },
-  { id: 'IT456', name: 'Milano Malpensa Aeroporto (MXP)' },
-  { id: 'IT789', name: 'Roma Fiumicino Aeroporto (FCO)' },
-  { id: 'DE999', name: 'Berlino Aeroporto (BER)' },
-  { id: 'AT111', name: 'Vienna Aeroporto (VIE)' }
+  // --- AEROPORTI ITALIA ---
+  { id: 'IT_MXP', name: 'Milano Malpensa Aeroporto T1 (MXP)', group: 'Aeroporti Italia' },
+  { id: 'IT_LIN', name: 'Milano Linate Aeroporto (LIN)', group: 'Aeroporti Italia' },
+  { id: 'IT_BGY', name: 'Bergamo Orio al Serio Aeroporto (BGY)', group: 'Aeroporti Italia' },
+  { id: 'IT_FCO', name: 'Roma Fiumicino Aeroporto (FCO)', group: 'Aeroporti Italia' },
+  { id: 'IT_CIA', name: 'Roma Ciampino Aeroporto (CIA)', group: 'Aeroporti Italia' },
+  { id: 'IT_VCE', name: 'Venezia Marco Polo Aeroporto (VCE)', group: 'Aeroporti Italia' },
+  { id: 'IT_TRS', name: 'Trieste Ronchi dei Legionari Aeroporto (TRS)', group: 'Aeroporti Italia' },
+  { id: 'IT_BLQ', name: 'Bologna Guglielmo Marconi Aeroporto (BLQ)', group: 'Aeroporti Italia' },
+  { id: 'IT_NAP', name: 'Napoli Capodichino Aeroporto (NAP)', group: 'Aeroporti Italia' },
+  { id: 'IT_TRN', name: 'Torino Caselle Aeroporto (TRN)', group: 'Aeroporti Italia' },
+  { id: 'IT_PSA', name: 'Pisa Galileo Galilei Aeroporto (PSA)', group: 'Aeroporti Italia' },
+  { id: 'IT_FLR', name: 'Firenze Peretola Aeroporto (FLR)', group: 'Aeroporti Italia' },
+  { id: 'IT_CTA', name: 'Catania Fontanarossa Aeroporto (CTA)', group: 'Aeroporti Italia' },
+  { id: 'IT_PMO', name: 'Palermo Falcone Borsellino Aeroporto (PMO)', group: 'Aeroporti Italia' },
+  { id: 'IT_CAG', name: 'Cagliari Elmas Aeroporto (CAG)', group: 'Aeroporti Italia' },
+  { id: 'IT_OLB', name: 'Olbia Costa Smeralda Aeroporto (OLB)', group: 'Aeroporti Italia' },
+
+  // --- STAZIONI & CITTÀ ITALIA ---
+  { id: 'IT_MIL_CENTRALE', name: 'Milano Stazione Centrale', group: 'Stazioni & Città Italia' },
+  { id: 'IT_ROM_TERMINI', name: 'Roma Stazione Termini', group: 'Stazioni & Città Italia' },
+  { id: 'IT_VEN_PZLE_ROMA', name: 'Venezia Piazzale Roma', group: 'Stazioni & Città Italia' },
+  { id: 'IT_FLR_CENTRALE', name: 'Firenze Stazione Santa Maria Novella', group: 'Stazioni & Città Italia' },
+  { id: 'IT_NAP_CENTRALE', name: 'Napoli Stazione Centrale', group: 'Stazioni & Città Italia' },
+  { id: 'IT_TOR_PORTA_NUOVA', name: 'Torino Stazione Porta Nuova', group: 'Stazioni & Città Italia' },
+
+  // --- AEROPORTI INTERNAZIONALI PRINCIPALI ---
+  { id: 'DE_MUC', name: 'Monaco di Baviera Aeroporto (MUC)', group: 'Aeroporti Internazionali' },
+  { id: 'DE_FRA', name: 'Francoforte sul Meno Aeroporto (FRA)', group: 'Aeroporti Internazionali' },
+  { id: 'DE_BER', name: 'Berlino Brandeburgo Aeroporto (BER)', group: 'Aeroporti Internazionali' },
+  { id: 'AT_VIE', name: 'Vienna Schwechat Aeroporto (VIE)', group: 'Aeroporti Internazionali' },
+  { id: 'ES_BCN', name: 'Barcellona El Prat Aeroporto (BCN)', group: 'Aeroporti Internazionali' },
+  { id: 'ES_MAD', name: 'Madrid Barajas Aeroporto (MAD)', group: 'Aeroporti Internazionali' },
+  { id: 'FR_CDG', name: 'Parigi Charles de Gaulle Aeroporto (CDG)', group: 'Aeroporti Internazionali' },
+  { id: 'FR_NCE', name: 'Nizza Costa Azzurra Aeroporto (NCE)', group: 'Aeroporti Internazionali' }
 ];
 
 // Lista Completa Categorie e Codici ACRISS
@@ -63,8 +93,8 @@ export default function WebDashboard() {
   const [toastMessage, setToastMessage] = useState('');
 
   const [slotsData, setSlotsData] = useState([
-    { location: 'DE123', category: 'LSAR', startDate: '2026-08-10', endDate: '2026-08-17', maxPrice: '85', email: 'utente@email.com', history: [85, 82, 79, 74, 71] },
-    { location: 'IT456', category: 'XFAR', startDate: '2026-09-01', endDate: '2026-09-05', maxPrice: '140', email: 'utente@email.com', history: [140, 135, 128, 130, 122] },
+    { location: 'DE_MUC', category: 'LSAR', startDate: '2026-08-10', endDate: '2026-08-17', maxPrice: '85', email: 'utente@email.com', history: [85, 82, 79, 74, 71] },
+    { location: 'IT_MXP', category: 'XFAR', startDate: '2026-09-01', endDate: '2026-09-05', maxPrice: '140', email: 'utente@email.com', history: [140, 135, 128, 130, 122] },
     { location: '', category: '', startDate: '', endDate: '', maxPrice: '', email: '', history: [] },
     { location: '', category: '', startDate: '', endDate: '', maxPrice: '', email: '', history: [] }
   ]);
@@ -161,7 +191,7 @@ export default function WebDashboard() {
       
       const updated = [...slotsData];
       const simPrice = Math.floor(Math.random() * (85 - 42 + 1)) + 42;
-      const oldHist = updated[activeSlot].history.length > 0 ? updated[activeSlot].history : [80, 76, 73];
+      const oldHist = updated[activeSlot].history.length > 0 ? updated[activeSlot].history : [80, 75, 71];
       updated[activeSlot].history = [...oldHist, simPrice];
       setSlotsData(updated);
 
@@ -172,7 +202,7 @@ export default function WebDashboard() {
         successful: 1,
         details: [{
           slotId: `slot_${activeSlot + 1}`,
-          location: currentSlot.location || 'DE123',
+          location: currentSlot.location || 'DE_MUC',
           price: simPrice,
           avgPrice: (updated[activeSlot].history.reduce((a,b)=>a+b,0)/updated[activeSlot].history.length).toFixed(2),
           jitterMs: randomJitter
@@ -183,6 +213,13 @@ export default function WebDashboard() {
     } finally {
       setIsCronRunning(false);
     }
+  };
+
+  // Group station options
+  const stationGroups = {
+    'Aeroporti Italia': SIXT_STATIONS.filter(s => s.group === 'Aeroporti Italia'),
+    'Stazioni & Città Italia': SIXT_STATIONS.filter(s => s.group === 'Stazioni & Città Italia'),
+    'Aeroporti Internazionali': SIXT_STATIONS.filter(s => s.group === 'Aeroporti Internazionali')
   };
 
   const history = currentSlot.history || [];
@@ -251,7 +288,7 @@ export default function WebDashboard() {
         {/* Form Inputs */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           
-          {/* Menù Stazioni */}
+          {/* Menù Stazioni con Optgroup */}
           <div>
             <label style={labelStyle}>{t.location}</label>
             <select 
@@ -260,8 +297,12 @@ export default function WebDashboard() {
               style={selectStyle}
             >
               <option value="">-- Scegli una stazione Sixt --</option>
-              {SIXT_STATIONS.map((st) => (
-                <option key={st.id} value={st.id}>{st.name}</option>
+              {Object.entries(stationGroups).map(([groupName, stations]) => (
+                <optgroup key={groupName} label={groupName}>
+                  {stations.map((st) => (
+                    <option key={st.id} value={st.id}>{st.name}</option>
+                  ))}
+                </optgroup>
               ))}
             </select>
           </div>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SIXT WEB TRACKER - Full ACRISS Category List & Vehicle Models</title>
+  <title>SIXT WEB TRACKER - Grouped Pickup Stations & ACRISS Codes</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -296,16 +296,50 @@
     <!-- Form -->
     <div class="form-group">
       
-      <!-- Stazioni Dropdown -->
+      <!-- Stazioni Dropdown con Optgroup -->
       <div>
         <label id="lbl-location">SELEZIONA LUOGO DI RITIRO</label>
         <select id="select-location" onchange="updateSlotData()">
           <option value="">-- Scegli una stazione Sixt --</option>
-          <option value="DE123">Monaco di Baviera Aeroporto (MUC)</option>
-          <option value="IT456">Milano Malpensa Aeroporto (MXP)</option>
-          <option value="IT789">Roma Fiumicino Aeroporto (FCO)</option>
-          <option value="DE999">Berlino Aeroporto (BER)</option>
-          <option value="AT111">Vienna Aeroporto (VIE)</option>
+
+          <optgroup label="Aeroporti Italia">
+            <option value="IT_MXP">Milano Malpensa Aeroporto T1 (MXP)</option>
+            <option value="IT_LIN">Milano Linate Aeroporto (LIN)</option>
+            <option value="IT_BGY">Bergamo Orio al Serio Aeroporto (BGY)</option>
+            <option value="IT_FCO">Roma Fiumicino Aeroporto (FCO)</option>
+            <option value="IT_CIA">Roma Ciampino Aeroporto (CIA)</option>
+            <option value="IT_VCE">Venezia Marco Polo Aeroporto (VCE)</option>
+            <option value="IT_TRS">Trieste Ronchi dei Legionari Aeroporto (TRS)</option>
+            <option value="IT_BLQ">Bologna Guglielmo Marconi Aeroporto (BLQ)</option>
+            <option value="IT_NAP">Napoli Capodichino Aeroporto (NAP)</option>
+            <option value="IT_TRN">Torino Caselle Aeroporto (TRN)</option>
+            <option value="IT_PSA">Pisa Galileo Galilei Aeroporto (PSA)</option>
+            <option value="IT_FLR">Firenze Peretola Aeroporto (FLR)</option>
+            <option value="IT_CTA">Catania Fontanarossa Aeroporto (CTA)</option>
+            <option value="IT_PMO">Palermo Falcone Borsellino Aeroporto (PMO)</option>
+            <option value="IT_CAG">Cagliari Elmas Aeroporto (CAG)</option>
+            <option value="IT_OLB">Olbia Costa Smeralda Aeroporto (OLB)</option>
+          </optgroup>
+
+          <optgroup label="Stazioni & Città Italia">
+            <option value="IT_MIL_CENTRALE">Milano Stazione Centrale</option>
+            <option value="IT_ROM_TERMINI">Roma Stazione Termini</option>
+            <option value="IT_VEN_PZLE_ROMA">Venezia Piazzale Roma</option>
+            <option value="IT_FLR_CENTRALE">Firenze Stazione Santa Maria Novella</option>
+            <option value="IT_NAP_CENTRALE">Napoli Stazione Centrale</option>
+            <option value="IT_TOR_PORTA_NUOVA">Torino Stazione Porta Nuova</option>
+          </optgroup>
+
+          <optgroup label="Aeroporti Internazionali Principali">
+            <option value="DE_MUC">Monaco di Baviera Aeroporto (MUC)</option>
+            <option value="DE_FRA">Francoforte sul Meno Aeroporto (FRA)</option>
+            <option value="DE_BER">Berlino Brandeburgo Aeroporto (BER)</option>
+            <option value="AT_VIE">Vienna Schwechat Aeroporto (VIE)</option>
+            <option value="ES_BCN">Barcellona El Prat Aeroporto (BCN)</option>
+            <option value="ES_MAD">Madrid Barajas Aeroporto (MAD)</option>
+            <option value="FR_CDG">Parigi Charles de Gaulle Aeroporto (CDG)</option>
+            <option value="FR_NCE">Nizza Costa Azzurra Aeroporto (NCE)</option>
+          </optgroup>
         </select>
       </div>
 
@@ -423,8 +457,8 @@
     let currentSlotIdx = 0;
 
     const slots = [
-      { id: 'slot_1', location: 'DE123', category: 'LSAR', startDate: '2026-08-10', endDate: '2026-08-17', maxPrice: '85', email: 'utente@email.com', history: [85, 82, 79, 74, 71] },
-      { id: 'slot_2', location: 'IT456', category: 'XFAR', startDate: '2026-09-01', endDate: '2026-09-05', maxPrice: '140', email: 'utente@email.com', history: [140, 135, 128, 130, 122] },
+      { id: 'slot_1', location: 'DE_MUC', category: 'LSAR', startDate: '2026-08-10', endDate: '2026-08-17', maxPrice: '85', email: 'utente@email.com', history: [85, 82, 79, 74, 71] },
+      { id: 'slot_2', location: 'IT_MXP', category: 'XFAR', startDate: '2026-09-01', endDate: '2026-09-05', maxPrice: '140', email: 'utente@email.com', history: [140, 135, 128, 130, 122] },
       { id: 'slot_3', location: '', category: '', startDate: '', endDate: '', maxPrice: '', email: '', history: [] },
       { id: 'slot_4', location: '', category: '', startDate: '', endDate: '', maxPrice: '', email: '', history: [] }
     ];
@@ -621,7 +655,7 @@
         item.innerHTML = `<div style="display:flex; justify-content:space-between; color:#FFF">
           <span>Cron Check Completed</span> <span>${time}</span>
         </div>
-        <div style="color:#FF5F00">→ Category [${s.category || 'LSAR'}]: Detected $${newPrice} (Avg: $${avg}) [Jitter: ${randomJitter}ms]</div>`;
+        <div style="color:#FF5F00">→ Station [${s.location || 'DE_MUC'}]: Detected $${newPrice} (Avg: $${avg}) [Jitter: ${randomJitter}ms]</div>`;
 
         logsContent.prepend(item);
 
