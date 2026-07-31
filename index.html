@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SIXT WEB TRACKER - Apple Cyber-Dark Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #08080a;
+      --card-bg: rgba(22, 22, 28, 0.85);
+      --card-border: rgba(255, 255, 255, 0.12);
+      --sixt-orange: #FF5F00;
+      --sixt-orange-gradient: linear-gradient(135deg, #FF5F00 0%, #FF2E00 100%);
+      --text-primary: #FFFFFF;
+      --text-secondary: #8E8E93;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-primary);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      position: relative;
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(255, 95, 0, 0.15) 0%, transparent 60%),
+        radial-gradient(circle at 80% 80%, rgba(255, 46, 0, 0.08) 0%, transparent 50%);
+      background-attachment: fixed;
+    }
+
+    .toast-banner {
+      position: fixed;
+      top: 20px;
+      z-index: 9999;
+      background-color: rgba(255, 95, 0, 0.95);
+      color: #FFFFFF;
+      padding: 12px 20px;
+      border-radius: 14px;
+      font-size: 12px;
+      font-weight: 700;
+      box-shadow: 0 10px 30px rgba(255, 95, 0, 0.5);
+      backdrop-filter: blur(10px);
+      max-width: 90%;
+      display: none;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 440px;
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 24px;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .title {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .title span {
+      color: var(--sixt-orange);
+    }
+
+    .subtitle-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 3px;
+    }
+
+    .subtitle {
+      font-size: 10px;
+      color: var(--text-secondary);
+    }
+
+    .pulse-dot-orange {
+      width: 8px;
+      height: 8px;
+      background-color: var(--sixt-orange);
+      border-radius: 50%;
+      display: inline-block;
+      box-shadow: 0 0 10px var(--sixt-orange);
+      animation: pulseGlow 2s infinite;
+    }
+
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 0 0 0 rgba(255, 95, 0, 0.7); }
+      70% { box-shadow: 0 0 0 8px rgba(255, 95, 0, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(255, 95, 0, 0); }
+    }
+
+    .lang-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #fff;
+      border-radius: 12px;
+      padding: 6px 12px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .tabs-container {
+      display: flex;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 4px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 8px 0;
+      border: none;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      color: var(--text-secondary);
+      background: transparent;
+      position: relative;
+    }
+
+    .tab-btn.active {
+      background-color: var(--sixt-orange);
+      color: #000000;
+      box-shadow: 0 0 12px rgba(255, 95, 0, 0.4);
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .field {
+      flex: 1;
+    }
+
+    label {
+      font-size: 10px;
+      color: var(--text-secondary);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    input {
+      width: 100%;
+      background-color: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 10px;
+      padding: 10px 12px;
+      color: #FFFFFF;
+      font-size: 12px;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    input:focus {
+      border-color: var(--sixt-orange);
+      box-shadow: 0 0 10px rgba(255, 95, 0, 0.3);
+    }
+
+    .stats-box {
+      background: rgba(255, 95, 0, 0.08);
+      border: 1px solid rgba(255, 95, 0, 0.25);
+      border-radius: 12px;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      margin-top: 6px;
+    }
+
+    .stats-val {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--sixt-orange);
+      margin-top: 2px;
+    }
+
+    .btn-primary {
+      background: var(--sixt-orange-gradient);
+      color: #FFFFFF;
+      border: none;
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(255, 95, 0, 0.35);
+      margin-top: 10px;
+      width: 100%;
+      transition: transform 0.15s ease;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 95, 0, 0.4);
+      color: var(--sixt-orange);
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 4px;
+    }
+
+    .logs-drawer {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 12px;
+      margin-top: 8px;
+      max-height: 160px;
+      overflow-y: auto;
+      display: none;
+    }
+
+    .log-item {
+      font-size: 10px;
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+  </style>
+</head>
+<body>
+
+  <div id="toast" class="toast-banner">
+    <span>🔔</span> <span id="toast-text"></span>
+  </div>
+
+  <div class="card">
+    
+    <!-- Header -->
+    <div class="header">
+      <div>
+        <h1 class="title">SIXT <span>WEB TRACKER</span></h1>
+        <div class="subtitle-wrapper">
+          <span class="pulse-dot-orange"></span>
+          <p id="sub-title-text" class="subtitle">Monitoraggio Cloud automatico (Check ogni 4-5 ore)</p>
+        </div>
+      </div>
+      <button id="lang-btn" class="lang-btn" onclick="toggleLang()">🇮🇹 IT</button>
+    </div>
+
+    <!-- 4 Slot Tabs -->
+    <div class="tabs-container">
+      <button id="tab-0" class="tab-btn active" onclick="switchSlot(0)">SLOT 1</button>
+      <button id="tab-1" class="tab-btn" onclick="switchSlot(1)">SLOT 2</button>
+      <button id="tab-2" class="tab-btn" onclick="switchSlot(2)">SLOT 3</button>
+      <button id="tab-3" class="tab-btn" onclick="switchSlot(3)">SLOT 4</button>
+    </div>
+
+    <!-- Form -->
+    <div class="form-group">
+      <div>
+        <label id="lbl-location">LUOGO RITIRO</label>
+        <input type="text" id="input-location" placeholder="es. Monaco Aeroporto..." oninput="updateSlotData()">
+      </div>
+
+      <div class="form-row">
+        <div class="field">
+          <label id="lbl-start">DATA INIZIO</label>
+          <input type="date" id="input-start" oninput="updateSlotData()">
+        </div>
+        <div class="field">
+          <label id="lbl-end">DATA FINE</label>
+          <input type="date" id="input-end" oninput="updateSlotData()">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="field">
+          <label id="lbl-category">CATEGORIA / MODELLO</label>
+          <input type="text" id="input-category" placeholder="es. CLA, SUV" oninput="updateSlotData()">
+        </div>
+        <div class="field">
+          <label id="lbl-flair">FLAIR MAX ($)</label>
+          <input type="number" id="input-flair" placeholder="es. 70" oninput="updateSlotData()">
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-box">
+        <div>
+          <div id="lbl-last" style="font-size: 9px; color: #8E8E93;">ULTIMO RILEVATO</div>
+          <div id="val-last" class="stats-val">$ 62</div>
+        </div>
+        <div style="text-align: right;">
+          <div id="lbl-avg" style="font-size: 9px; color: #8E8E93;">MEDIA STORICA</div>
+          <div id="val-avg" class="stats-val">$ 66.40</div>
+        </div>
+      </div>
+
+      <button id="btn-save" class="btn-primary" onclick="saveSlot()">SALVA E ATTIVA NEL CLOUD</button>
+      <button id="btn-cron" class="btn-secondary" onclick="runManualCron()">⚡ ESEGUI TEST CRON (4-5H LOGIC)</button>
+
+      <div style="text-align: center; margin-top: 4px;">
+        <button id="btn-toggle-logs" style="background:none; border:none; color:#8E8E93; font-size:10px; font-weight:700; cursor:pointer;" onclick="toggleLogs()">
+          ▼ Mostra Log Cloud
+        </button>
+      </div>
+
+      <div id="logs-drawer" class="logs-drawer">
+        <div style="font-size:10px; font-weight:800; color:#FF5F00; margin-bottom:6px;">LOG ESECUZIONE CLOUD CRON</div>
+        <div id="logs-content" style="font-size:10px; color:#8E8E93;">
+          In attesa di primo ciclo di controllo...
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    let currentLang = 'IT';
+    let currentSlotIdx = 0;
+
+    const slots = [
+      { id: 'slot_1', active: true, location: 'Monaco Aeroporto', startDate: '2026-08-10', endDate: '2026-08-17', category: 'CLA Shooting Brake', maxPriceFlair: 70, lastPrice: 62, avgPrice: 66.40 },
+      { id: 'slot_2', active: false, location: 'Milano Malpensa', startDate: '2026-09-01', endDate: '2026-09-05', category: 'BMW Serie 3', maxPriceFlair: 85, lastPrice: null, avgPrice: null },
+      { id: 'slot_3', active: false, location: 'Roma Fiumicino', startDate: '2026-10-12', endDate: '2026-10-19', category: 'Audi A4 Avant', maxPriceFlair: 75, lastPrice: null, avgPrice: null },
+      { id: 'slot_4', active: false, location: 'Zurigo Aeroporto', startDate: '2026-11-20', endDate: '2026-11-25', category: 'Porsche Macan', maxPriceFlair: 120, lastPrice: null, avgPrice: null }
+    ];
+
+    const i18n = {
+      IT: {
+        subtitle: "Monitoraggio Cloud automatico (Check ogni 4-5 ore)",
+        location: "LUOGO RITIRO",
+        start: "DATA INIZIO",
+        end: "DATA FINE",
+        category: "CATEGORIA / MODELLO",
+        flair: "FLAIR MAX ($)",
+        lastPrice: "ULTIMO RILEVATO",
+        avgPrice: "MEDIA STORICA",
+        saveBtn: "SALVA E ATTIVA NEL CLOUD",
+        cronBtn: "⚡ ESEGUI TEST CRON (4-5H LOGIC)",
+        savedAlert: "Slot attivato! Il Cloud controllerà i prezzi ogni 4-5 ore e ti invierà un'email in caso di ribassi.",
+        viewLogs: "▼ Mostra Log Cloud",
+        hideLogs: "▲ Nascondi Log Cloud"
+      },
+      EN: {
+        subtitle: "Automatic Cloud Tracking (Check every 4-5 hours)",
+        location: "PICKUP LOCATION",
+        start: "START DATE",
+        end: "END DATE",
+        category: "CATEGORY / MODEL",
+        flair: "MAX FLAIR ($)",
+        lastPrice: "LAST DETECTED",
+        avgPrice: "AVERAGE PRICE",
+        saveBtn: "SAVE TO CLOUD TRACKER",
+        cronBtn: "⚡ RUN MANUAL CRON CHECK",
+        savedAlert: "Slot activated! The Cloud will check prices every 4-5 hours and email you when prices drop.",
+        viewLogs: "▼ View Cloud Logs",
+        hideLogs: "▲ Hide Cloud Logs"
+      }
+    };
+
+    function renderUI() {
+      const s = slots[currentSlotIdx];
+      const t = i18n[currentLang];
+
+      document.getElementById('sub-title-text').innerText = t.subtitle;
+      document.getElementById('lang-btn').innerText = currentLang === 'IT' ? '🇮🇹 IT' : '🇬🇧 EN';
+
+      document.getElementById('lbl-location').innerText = t.location;
+      document.getElementById('lbl-start').innerText = t.start;
+      document.getElementById('lbl-end').innerText = t.end;
+      document.getElementById('lbl-category').innerText = t.category;
+      document.getElementById('lbl-flair').innerText = t.flair;
+      document.getElementById('lbl-last').innerText = t.lastPrice;
+      document.getElementById('lbl-avg').innerText = t.avgPrice;
+      document.getElementById('btn-save').innerText = t.saveBtn;
+      document.getElementById('btn-cron').innerText = t.cronBtn;
+
+      document.getElementById('input-location').value = s.location || '';
+      document.getElementById('input-start').value = s.startDate || '';
+      document.getElementById('input-end').value = s.endDate || '';
+      document.getElementById('input-category').value = s.category || '';
+      document.getElementById('input-flair').value = s.maxPriceFlair || '';
+
+      document.getElementById('val-last').innerText = s.lastPrice ? `$ ${s.lastPrice}` : '$ --';
+      document.getElementById('val-avg').innerText = s.avgPrice ? `$ ${s.avgPrice}` : '$ --';
+
+      for (let i = 0; i < 4; i++) {
+        const tab = document.getElementById(`tab-${i}`);
+        if (i === currentSlotIdx) {
+          tab.classList.add('active');
+        } else {
+          tab.classList.remove('active');
+        }
+      }
+    }
+
+    function switchSlot(idx) {
+      currentSlotIdx = idx;
+      renderUI();
+    }
+
+    function updateSlotData() {
+      const s = slots[currentSlotIdx];
+      s.location = document.getElementById('input-location').value;
+      s.startDate = document.getElementById('input-start').value;
+      s.endDate = document.getElementById('input-end').value;
+      s.category = document.getElementById('input-category').value;
+      s.maxPriceFlair = document.getElementById('input-flair').value;
+    }
+
+    function saveSlot() {
+      slots[currentSlotIdx].active = true;
+      showToast(i18n[currentLang].savedAlert);
+    }
+
+    function toggleLang() {
+      currentLang = currentLang === 'IT' ? 'EN' : 'IT';
+      renderUI();
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toast-text').innerText = msg;
+      toast.style.display = 'flex';
+      setTimeout(() => { toast.style.display = 'none'; }, 4000);
+    }
+
+    function toggleLogs() {
+      const drawer = document.getElementById('logs-drawer');
+      const btn = document.getElementById('btn-toggle-logs');
+      const isVisible = drawer.style.display === 'block';
+
+      if (isVisible) {
+        drawer.style.display = 'none';
+        btn.innerText = i18n[currentLang].viewLogs;
+      } else {
+        drawer.style.display = 'block';
+        btn.innerText = i18n[currentLang].hideLogs;
+      }
+    }
+
+    function runManualCron() {
+      const btn = document.getElementById('btn-cron');
+      btn.innerText = '⏳ Jitter Anti-Pattern (1.5s - 4.0s)...';
+      btn.disabled = true;
+
+      const randomJitter = Math.floor(Math.random() * (3500 - 1500 + 1)) + 1500;
+
+      setTimeout(() => {
+        const newPrice = Math.floor(Math.random() * (85 - 42 + 1)) + 42;
+        const s = slots[currentSlotIdx];
+        const prev = s.lastPrice || 66;
+        s.lastPrice = newPrice;
+        s.avgPrice = parseFloat(((prev + newPrice) / 2).toFixed(2));
+        s.active = true;
+
+        renderUI();
+
+        const logsContent = document.getElementById('logs-content');
+        const time = new Date().toLocaleTimeString();
+        const item = document.createElement('div');
+        item.className = 'log-item';
+        item.innerHTML = `<div style="display:flex; justify-content:space-between; color:#FFF">
+          <span>Cron Check Completed</span> <span>${time}</span>
+        </div>
+        <div style="color:#FF5F00">→ ${s.location}: Detected $${newPrice} (Avg: $${s.avgPrice}) [Anti-Pattern Jitter: ${randomJitter}ms]</div>`;
+
+        logsContent.prepend(item);
+
+        showToast(`Ciclo Cron completato! Prezzo rilevato: $${newPrice}`);
+        btn.innerText = i18n[currentLang].cronBtn;
+        btn.disabled = false;
+      }, randomJitter);
+    }
+
+    // Initialize UI
+    renderUI();
+  </script>
+</body>
+</html>
