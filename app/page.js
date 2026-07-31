@@ -1,69 +1,102 @@
 /**
  * ============================================================================
- * SIXT PRICE INTELLIGENCE & COMPARISON DASHBOARD
+ * SIXT PRICE INTELLIGENCE - FULL STATIONS & ACRISS CODES INTEGRATION
  * ============================================================================
  */
 
 'use client';
 import React, { useState } from 'react';
 
-// 1. Lista Stazioni Filtrata per le 7 Città Target
-const TARGET_LOCATIONS = [
-  // MONACO DI BAVIERA
-  { id: 'MUC_AP', city: 'Monaco di Baviera', name: 'Monaco Aeroporto (MUC)', type: 'Aeroporto' },
-  { id: 'MUC_HBF', city: 'Monaco di Baviera', name: 'Monaco Stazione Centrale (Hauptbahnhof)', type: 'Stazione' },
-  { id: 'MUC_CTR', city: 'Monaco di Baviera', name: 'Monaco Centro / Stachus', type: 'Città' },
-
-  // WÜRZBURG
-  { id: 'WUE_HBF', city: 'Würzburg', name: 'Würzburg Stazione Centrale', type: 'Stazione' },
-  { id: 'WUE_CTR', city: 'Würzburg', name: 'Würzburg Nürnberger Str.', type: 'Città' },
-
-  // NORIMBERGA
-  { id: 'NUE_AP', city: 'Norimberga', name: 'Norimberga Aeroporto (NUE)', type: 'Aeroporto' },
-  { id: 'NUE_HBF', city: 'Norimberga', name: 'Norimberga Stazione Centrale', type: 'Stazione' },
-
-  // FRANCOFORTE
-  { id: 'FRA_AP', city: 'Francoforte', name: 'Francoforte Aeroporto (FRA)', type: 'Aeroporto' },
-  { id: 'FRA_HBF', city: 'Francoforte', name: 'Francoforte Stazione Centrale', type: 'Stazione' },
-
-  // MILANO
-  { id: 'MIL_MXP', city: 'Milano', name: 'Milano Malpensa (MXP)', type: 'Aeroporto' },
-  { id: 'MIL_LIN', city: 'Milano', name: 'Milano Linate (LIN)', type: 'Aeroporto' },
-  { id: 'MIL_BGY', city: 'Milano', name: 'Milano Bergamo Orio al Serio (BGY)', type: 'Aeroporto' },
-  { id: 'MIL_CTR', city: 'Milano', name: 'Milano Stazione Centrale', type: 'Stazione' },
-
-  // ROMA
-  { id: 'ROM_FCO', city: 'Roma', name: 'Roma Fiumicino (FCO)', type: 'Aeroporto' },
-  { id: 'ROM_CIA', city: 'Roma', name: 'Roma Ciampino (CIA)', type: 'Aeroporto' },
-  { id: 'ROM_TER', city: 'Roma', name: 'Roma Stazione Termini', type: 'Stazione' },
-
-  // VENEZIA
-  { id: 'VCE_AP', city: 'Venezia', name: 'Venezia Marco Polo (VCE)', type: 'Aeroporto' },
-  { id: 'VCE_PR', city: 'Venezia', name: 'Venezia Piazzale Roma', type: 'Città' },
-  { id: 'VCE_ME', city: 'Venezia', name: 'Venezia Mestre Stazione', type: 'Stazione' }
-];
-
-// Macro Categorie
-const MACRO_CATEGORIES = [
-  { code: 'ECONOMY', label: 'Economy / Compact (es. Polo / Golf)' },
-  { code: 'PREMIUM_SEDAN', label: 'Berline Premium (es. BMW Serie 3 / Serie 5)' },
-  { code: 'SUV', label: 'SUV / Fuoristrada (es. X1 / X5 / Renegade)' },
-  { code: 'MINIVAN', label: 'Minivan / 7-9 Posti (es. Touran / Talento)' }
-];
-
-// Dati Storici Simulati per Categoria e Città ($/giorno)
-const HISTORICAL_DATABASE = {
-  'Monaco di Baviera': { ECONOMY: 42, PREMIUM_SEDAN: 78, SUV: 85, MINIVAN: 110 },
-  'Würzburg': { ECONOMY: 38, PREMIUM_SEDAN: 68, SUV: 72, MINIVAN: 95 },
-  'Norimberga': { ECONOMY: 40, PREMIUM_SEDAN: 72, SUV: 78, MINIVAN: 100 },
-  'Francoforte': { ECONOMY: 45, PREMIUM_SEDAN: 82, SUV: 88, MINIVAN: 115 },
-  'Milano': { ECONOMY: 35, PREMIUM_SEDAN: 65, SUV: 70, MINIVAN: 90 },
-  'Roma': { ECONOMY: 36, PREMIUM_SEDAN: 67, SUV: 72, MINIVAN: 92 },
-  'Venezia': { ECONOMY: 39, PREMIUM_SEDAN: 70, SUV: 75, MINIVAN: 98 }
+// 1. Mappatura completa Stazioni divise per Macro Città
+const CITY_STATIONS_MAP = {
+  'Monaco di Baviera': [
+    { id: 'MUC_ALL', name: 'Tutte le stazioni di Monaco' },
+    { id: 'MUC_AP', name: 'Monaco Aeroporto (MUC)' },
+    { id: 'MUC_HBF', name: 'Monaco Stazione Centrale (Hauptbahnhof)' },
+    { id: 'MUC_CTR', name: 'Monaco Centro / Stachus' },
+    { id: 'MUC_EAST', name: 'Monaco Ostbahnhof' }
+  ],
+  'Würzburg': [
+    { id: 'WUE_ALL', name: 'Tutte le stazioni di Würzburg' },
+    { id: 'WUE_HBF', name: 'Würzburg Stazione Centrale' },
+    { id: 'WUE_CTR', name: 'Würzburg Nürnberger Str.' }
+  ],
+  'Norimberga': [
+    { id: 'NUE_ALL', name: 'Tutte le stazioni di Norimberga' },
+    { id: 'NUE_AP', name: 'Norimberga Aeroporto (NUE)' },
+    { id: 'NUE_HBF', name: 'Norimberga Stazione Centrale' }
+  ],
+  'Francoforte': [
+    { id: 'FRA_ALL', name: 'Tutte le stazioni di Francoforte' },
+    { id: 'FRA_AP', name: 'Francoforte Aeroporto (FRA)' },
+    { id: 'FRA_HBF', name: 'Francoforte Stazione Centrale' },
+    { id: 'FRA_WEST', name: 'Francoforte Ovest / Camberger Str.' }
+  ],
+  'Milano': [
+    { id: 'MIL_ALL', name: 'Tutte le stazioni di Milano' },
+    { id: 'MIL_MXP', name: 'Milano Malpensa (MXP)' },
+    { id: 'MIL_LIN', name: 'Milano Linate (LIN)' },
+    { id: 'MIL_BGY', name: 'Milano Bergamo Orio al Serio (BGY)' },
+    { id: 'MIL_CTR', name: 'Milano Stazione Centrale' }
+  ],
+  'Roma': [
+    { id: 'ROM_ALL', name: 'Tutte le stazioni di Roma' },
+    { id: 'ROM_FCO', name: 'Roma Fiumicino (FCO)' },
+    { id: 'ROM_CIA', name: 'Roma Ciampino (CIA)' },
+    { id: 'ROM_TER', name: 'Roma Stazione Termini' },
+    { id: 'ROM_TIB', name: 'Roma Stazione Tiburtina' }
+  ],
+  'Venezia': [
+    { id: 'VCE_ALL', name: 'Tutte le stazioni di Venezia' },
+    { id: 'VCE_AP', name: 'Venezia Marco Polo (VCE)' },
+    { id: 'VCE_PR', name: 'Venezia Piazzale Roma' },
+    { id: 'VCE_ME', name: 'Venezia Mestre Stazione' }
+  ]
 };
+
+// 2. Lista completa Codici ACRISS / Categorie
+const ACRISS_CATEGORIES = [
+  { code: 'MCMR', name: 'Berlina - Citroën C1 (Manuale)', baseAvg: 35 },
+  { code: 'ECMR', name: 'Berlina - Fiat 500 (Manuale)', baseAvg: 38 },
+  { code: 'EDMR', name: 'Berlina - VW Polo (Manuale)', baseAvg: 42 },
+  { code: 'CCMR/CCAR', name: 'Berlina Premium - MINI Hatch (Man/Auto)', baseAvg: 46 },
+  { code: 'CDMR', name: 'Berlina - Fiat Tipo (Manuale)', baseAvg: 45 },
+  { code: 'CLMR/CLAR', name: 'Berlina Premium - VW Golf (Man/Auto)', baseAvg: 48 },
+  { code: 'CWMR', name: 'Station Wagon - Fiat Tipo SW (Manuale)', baseAvg: 52 },
+  { code: 'IDMR/IDAR', name: 'Berlina Premium - Alfa Romeo Giulietta (Man/Auto)', baseAvg: 55 },
+  { code: 'ILMR/ILAR', name: 'Berlina Premium - BMW Serie 1 (Man/Auto)', baseAvg: 58 },
+  { code: 'SDMR/SDAR', name: 'Berlina Premium - BMW Serie 2 Active Tourer (Man/Auto)', baseAvg: 62 },
+  { code: 'SWAR', name: 'Station Wagon Premium - BMW Serie 2 Grand Tourer (Auto)', baseAvg: 68 },
+  { code: 'FDAR', name: 'Berlina Premium - Alfa Romeo Giulia (Auto)', baseAvg: 72 },
+  { code: 'FWAR', name: 'Station Wagon Premium - BMW Serie 3 Touring (Auto)', baseAvg: 76 },
+  { code: 'PDAR', name: 'Berlina Premium - Audi A5 Sportback (Auto)', baseAvg: 82 },
+  { code: 'LDAR', name: 'Berlina Premium - BMW Serie 5 (Auto)', baseAvg: 88 },
+  { code: 'LWAR', name: 'Station Wagon Premium - BMW Serie 5 Touring (Auto)', baseAvg: 92 },
+  { code: 'XCAR', name: 'Berlina Premium - BMW Serie 6 GT (Auto)', baseAvg: 105 },
+  { code: 'XDAR', name: 'Berlina Premium - BMW Serie 7 (Auto)', baseAvg: 135 },
+  { code: 'XSAR', name: 'Berlina Premium - BMW Serie 8 (Auto)', baseAvg: 155 },
+  { code: 'FSAR', name: 'Coupé Premium - BMW Serie 2 Coupé (Auto)', baseAvg: 78 },
+  { code: 'LSAR', name: 'Coupé Premium - BMW Serie 4 Gran Coupé (Auto)', baseAvg: 95 },
+  { code: 'CVMR', name: 'Minivan - Fiat Qubo (Manuale)', baseAvg: 58 },
+  { code: 'IVAR', name: 'Minivan - VW Touran 7S (Auto)', baseAvg: 85 },
+  { code: 'SVAR', name: 'Minivan - Peugeot 5008 (Auto)', baseAvg: 90 },
+  { code: 'FVMR/FVAR', name: 'Minivan - Fiat Talento (Man/Auto)', baseAvg: 110 },
+  { code: 'CTMR/CTAR', name: 'Cabriolet - Fiat 500C (Man/Auto)', baseAvg: 65 },
+  { code: 'STAR', name: 'Cabriolet - BMW Serie 2 Cabrio (Auto)', baseAvg: 85 },
+  { code: 'LTAR', name: 'Cabriolet - BMW Serie 4 Cabrio (Auto)', baseAvg: 105 },
+  { code: 'PTAR', name: 'Cabriolet - BMW Z4 (Auto)', baseAvg: 120 },
+  { code: 'CFMR', name: 'Fuoristrada / SUV - Fiat 500X (Manuale)', baseAvg: 55 },
+  { code: 'IFMR/IFAR', name: 'Fuoristrada / SUV - Jeep Renegade (Man/Auto)', baseAvg: 62 },
+  { code: 'SFMR/SFAR', name: 'Fuoristrada / SUV - Ford Kuga (Man/Auto)', baseAvg: 70 },
+  { code: 'FFAR', name: 'Fuoristrada / SUV - BMW X1 (Auto)', baseAvg: 78 },
+  { code: 'PFAR', name: 'Fuoristrada / SUV - Jaguar I-Pace (Auto)', baseAvg: 115 },
+  { code: 'XFAR', name: 'Fuoristrada / SUV - BMW X5 (Auto)', baseAvg: 130 }
+];
 
 export default function PriceIntelligenceApp() {
   const [selectedCity, setSelectedCity] = useState('Monaco di Baviera');
+  const [selectedStation, setSelectedStation] = useState('MUC_ALL');
+  const [selectedCategory, setSelectedCategory] = useState('CLMR/CLAR');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [searched, setSearched] = useState(false);
@@ -72,18 +105,23 @@ export default function PriceIntelligenceApp() {
   const [showLogs, setShowLogs] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
 
-  // Filtra stazioni in base alla città selezionata
-  const cityStations = TARGET_LOCATIONS.filter(s => s.city === selectedCity);
+  // Cambia le stazioni disponibili quando cambia la città
+  const handleCityChange = (e) => {
+    const city = e.target.value;
+    setSelectedCity(city);
+    setSelectedStation(CITY_STATIONS_MAP[city][0].id);
+  };
 
   const showToast = (msg) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(''), 4500);
   };
 
-  const handleRunComparison = () => {
-    setSearched(true);
-    showToast(`Confronto prezzi in tempo reale avviato per ${selectedCity}!`);
-  };
+  const currentStationObj = CITY_STATIONS_MAP[selectedCity].find(s => s.id === selectedStation) || CITY_STATIONS_MAP[selectedCity][0];
+  const currentCategoryObj = ACRISS_CATEGORIES.find(c => c.code === selectedCategory) || ACRISS_CATEGORIES[0];
+  const historicalAvg = currentCategoryObj.baseAvg || 48;
+  const detectedPrice = Math.round(historicalAvg * 0.855); // -14.5% sotto la media
+  const diffPct = (((detectedPrice - historicalAvg) / historicalAvg) * 100).toFixed(1);
 
   const handleRunManualCron = async () => {
     setIsCronRunning(true);
@@ -104,21 +142,18 @@ export default function PriceIntelligenceApp() {
       const simLog = {
         status: 'completed',
         timestamp: new Date().toISOString(),
-        processed: cityStations.length,
-        successful: cityStations.length,
-        details: cityStations.map(st => {
-          const simPrice = Math.floor(Math.random() * (88 - 34 + 1)) + 34;
-          return {
-            slotId: st.id,
-            location: st.name,
-            price: simPrice,
-            avgPrice: HISTORICAL_DATABASE[selectedCity]['ECONOMY'],
-            jitterMs: Math.floor(Math.random() * 1000) + 1500
-          };
-        })
+        processed: 1,
+        successful: 1,
+        details: [{
+          slotId: selectedStation,
+          location: `${currentStationObj.name} [${selectedCategory}]`,
+          price: detectedPrice,
+          avgPrice: historicalAvg,
+          jitterMs: randomJitter
+        }]
       };
       setCronLogs(prev => [simLog, ...prev]);
-      showToast(`Ciclo Cron completato per ${selectedCity}!`);
+      showToast(`Ciclo Cron completato per [${selectedCategory}] a ${selectedCity}!`);
     } finally {
       setIsCronRunning(false);
     }
@@ -142,133 +177,95 @@ export default function PriceIntelligenceApp() {
           <h1 style={titleStyle}>
             SIXT <span style={{ color: '#FF5F00' }}>PRICE INTELLIGENCE</span>
           </h1>
-          <p style={subtitleStyle}>Analisi Medie Storiche & Comparatore di Prezzo in Tempo Reale</p>
+          <p style={subtitleStyle}>Analisi Medie Storiche & Comparatore Categorie ACRISS</p>
         </div>
 
-        {/* SEZIONE 1: Date del Viaggio */}
+        {/* SEZIONE 1: Selezione Luogo, Stazione e Categoria */}
         <div style={sectionBoxStyle}>
-          <div style={sectionTitleStyle}>1. Inserisci le Date del Noleggio</div>
-          <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
-            <div style={{ flex: 1 }}>
-              <label style={labelStyle}>Data Inizio</label>
-              <input 
-                type="date" 
-                value={startDate} 
-                onChange={(e) => setStartDate(e.target.value)} 
-                style={inputStyle} 
-              />
-            </div>
-            <div style={{ flex: 1 }}>
-              <label style={labelStyle}>Data Fine</label>
-              <input 
-                type="date" 
-                value={endDate} 
-                onChange={(e) => setEndDate(e.target.value)} 
-                style={inputStyle} 
-              />
-            </div>
-          </div>
-          <button 
-            onClick={handleRunComparison} 
-            style={{ ...btnStyle, marginTop: '12px' }}
-          >
-            CONFRONTA PREZZI IN TEMPO REALE
-          </button>
-        </div>
-
-        {/* SEZIONE 2: Esploratore Database Medie Storiche */}
-        <div style={{ ...sectionBoxStyle, marginTop: '16px' }}>
-          <div style={sectionTitleStyle}>2. Database Medie Storiche per Città</div>
+          <div style={sectionTitleStyle}>1. Configura Ricerca & Categoria</div>
           
+          {/* Macro Città */}
           <div style={{ marginTop: '10px' }}>
-            <label style={labelStyle}>Seleziona Macro Città</label>
-            <select 
-              value={selectedCity} 
-              onChange={(e) => setSelectedCity(e.target.value)}
-              style={selectStyle}
-            >
-              {Object.keys(HISTORICAL_DATABASE).map(city => (
+            <label style={labelStyle}>Macro Città</label>
+            <select value={selectedCity} onChange={handleCityChange} style={selectStyle}>
+              {Object.keys(CITY_STATIONS_MAP).map(city => (
                 <option key={city} value={city}>{city}</option>
               ))}
             </select>
           </div>
 
-          {/* Lista Stazioni Interne */}
-          <div style={{ marginTop: '12px' }}>
-            <div style={{ fontSize: '10px', color: '#8E8E93', marginBottom: '6px' }}>
-              STAZIONI INCLUSE A {selectedCity.toUpperCase()}:
-            </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-              {cityStations.map(st => (
-                <span key={st.id} style={tagStyle}>
-                  📍 {st.name}
-                </span>
+          {/* Stazione Specifica della Città */}
+          <div style={{ marginTop: '10px' }}>
+            <label style={labelStyle}>Stazione / Punto di Ritiro Specifico</label>
+            <select 
+              value={selectedStation} 
+              onChange={(e) => setSelectedStation(e.target.value)} 
+              style={selectStyle}
+            >
+              {CITY_STATIONS_MAP[selectedCity].map(st => (
+                <option key={st.id} value={st.id}>{st.name}</option>
               ))}
+            </select>
+          </div>
+
+          {/* Menù Categorie ACRISS */}
+          <div style={{ marginTop: '10px' }}>
+            <label style={labelStyle}>Categoria Veicolo / Codice ACRISS</label>
+            <select 
+              value={selectedCategory} 
+              onChange={(e) => setSelectedCategory(e.target.value)} 
+              style={selectStyle}
+            >
+              {ACRISS_CATEGORIES.map(cat => (
+                <option key={cat.code} value={cat.code}>[{cat.code}] {cat.name}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* Date */}
+          <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+            <div style={{ flex: 1 }}>
+              <label style={labelStyle}>Data Inizio</label>
+              <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} style={inputStyle} />
+            </div>
+            <div style={{ flex: 1 }}>
+              <label style={labelStyle}>Data Fine</label>
+              <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} style={inputStyle} />
             </div>
           </div>
 
-          {/* Tabella Medie Storiche per Categoria */}
-          <div style={{ marginTop: '16px' }}>
-            <div style={{ fontSize: '11px', fontWeight: '800', color: '#FF5F00', marginBottom: '8px' }}>
-              MEDIE STORICHE GIORNO ($/gg) - {selectedCity}
-            </div>
-            {MACRO_CATEGORIES.map(cat => (
-              <div key={cat.code} style={dataRowStyle}>
-                <span style={{ fontSize: '11px', color: '#DDD' }}>{cat.label}</span>
-                <span style={{ fontSize: '12px', fontWeight: '800', color: '#FF5F00' }}>
-                  ${HISTORICAL_DATABASE[selectedCity][cat.code]} /gg
-                </span>
-              </div>
-            ))}
-          </div>
+          <button onClick={() => setSearched(true)} style={{ ...btnStyle, marginTop: '14px' }}>
+            CONFRONTA PREZZO vs MEDIA STORICA
+          </button>
         </div>
 
-        {/* SEZIONE 3: Risultati Comparativi dopo la Ricerca */}
+        {/* SEZIONE 2: Risultato Comparazione */}
         {searched && (
           <div style={{ ...sectionBoxStyle, marginTop: '16px', border: '1px solid #FF5F00' }}>
             <div style={{ ...sectionTitleStyle, color: '#FF5F00' }}>
-              3. Risultati Comparativi vs Media Storica
+              2. Risultato per [{selectedCategory}] a {selectedCity}
             </div>
-            <p style={{ fontSize: '10px', color: '#8E8E93', marginTop: '4px' }}>
-              Prezzi rilevati per le date selezionate rispetto alla media di {selectedCity}:
-            </p>
-
+            
             <div style={{ marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              {/* Esempio Risultati Rilevati */}
               <div style={resultCardStyle}>
                 <div>
-                  <div style={{ fontSize: '12px', fontWeight: '800' }}>Economy (es. VW Golf)</div>
-                  <div style={{ fontSize: '10px', color: '#8E8E93' }}>
-                    Prezzo Attuale: $34/gg (Media: ${HISTORICAL_DATABASE[selectedCity]['ECONOMY']}/gg)
+                  <div style={{ fontSize: '11px', color: '#8E8E93' }}>
+                    Stazione: {currentStationObj?.name}
+                  </div>
+                  <div style={{ fontSize: '14px', fontWeight: '800', marginTop: '2px' }}>
+                    Prezzo Rilevato: ${detectedPrice}/gg
+                  </div>
+                  <div style={{ fontSize: '10px', color: '#AAA' }}>
+                    Media Storica della Categoria: ${historicalAvg}/gg
                   </div>
                 </div>
-                <div style={badgeGoodStyle}>-19% SOTTO LA MEDIA</div>
-              </div>
-
-              <div style={resultCardStyle}>
-                <div>
-                  <div style={{ fontSize: '12px', fontWeight: '800' }}>Berlina Premium (es. BMW Serie 3)</div>
-                  <div style={{ fontSize: '10px', color: '#8E8E93' }}>
-                    Prezzo Attuale: $89/gg (Media: ${HISTORICAL_DATABASE[selectedCity]['PREMIUM_SEDAN']}/gg)
-                  </div>
-                </div>
-                <div style={badgeBadStyle}>+14% SOPRA LA MEDIA</div>
-              </div>
-
-              <div style={resultCardStyle}>
-                <div>
-                  <div style={{ fontSize: '12px', fontWeight: '800' }}>SUV / Fuoristrada (es. BMW X5)</div>
-                  <div style={{ fontSize: '10px', color: '#8E8E93' }}>
-                    Prezzo Attuale: $71/gg (Media: ${HISTORICAL_DATABASE[selectedCity]['SUV']}/gg)
-                  </div>
-                </div>
-                <div style={badgeGoodStyle}>-16% SOTTO LA MEDIA</div>
+                <div style={badgeGoodStyle}>{diffPct}% SOTTO LA MEDIA</div>
               </div>
             </div>
           </div>
         )}
 
-        {/* Background Cloud Cron Engine Controls */}
+        {/* Controls for Background Cloud Cron Engine */}
         <div style={{ marginTop: '16px' }}>
           <button
             onClick={handleRunManualCron}
@@ -281,7 +278,7 @@ export default function PriceIntelligenceApp() {
               boxShadow: 'none'
             }}
           >
-            {isCronRunning ? '⏳ ESECUZIONE CRON CLOUD IN CORSO...' : `⚡ TEST MOTORE CLOUD CRON (${selectedCity.toUpperCase()})`}
+            {isCronRunning ? '⏳ ESECUZIONE CRON CLOUD IN CORSO...' : `⚡ TEST MOTORE CLOUD CRON ([${selectedCategory}] ${selectedCity.toUpperCase()})`}
           </button>
         </div>
 
@@ -355,11 +352,8 @@ const labelStyle = { fontSize: '10px', color: '#8E8E93', fontWeight: '700', text
 const inputStyle = { width: '100%', backgroundColor: 'rgba(255, 255, 255, 0.06)', border: '1px solid rgba(255, 255, 255, 0.12)', borderRadius: '10px', padding: '10px 12px', color: '#FFFFFF', fontSize: '12px', outline: 'none', marginTop: '4px', boxSizing: 'border-box' };
 const selectStyle = { ...inputStyle, backgroundColor: '#16161c' };
 const btnStyle = { width: '100%', background: 'linear-gradient(135deg, #FF5F00 0%, #FF2E00 100%)', color: '#FFFFFF', border: 'none', borderRadius: '12px', padding: '12px', fontSize: '11px', fontWeight: '800', cursor: 'pointer', boxShadow: '0 4px 20px rgba(255, 95, 0, 0.35)' };
-const tagStyle = { fontSize: '9px', background: 'rgba(255,255,255,0.08)', padding: '4px 8px', borderRadius: '6px', color: '#CCC' };
-const dataRowStyle = { display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' };
-const resultCardStyle = { display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(0,0,0,0.3)', padding: '10px 12px', borderRadius: '10px' };
-const badgeGoodStyle = { fontSize: '9px', fontWeight: '800', background: 'rgba(46, 213, 115, 0.15)', color: '#2ed573', padding: '4px 8px', borderRadius: '6px', border: '1px solid #2ed573' };
-const badgeBadStyle = { fontSize: '9px', fontWeight: '800', background: 'rgba(255, 71, 87, 0.15)', color: '#ff4757', padding: '4px 8px', borderRadius: '6px', border: '1px solid #ff4757' };
+const resultCardStyle = { display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(0,0,0,0.3)', padding: '12px', borderRadius: '10px' };
+const badgeGoodStyle = { fontSize: '9px', fontWeight: '800', background: 'rgba(46, 213, 115, 0.15)', color: '#2ed573', padding: '6px 10px', borderRadius: '6px', border: '1px solid #2ed573' };
 
 const logToggleBtnStyle = {
   background: 'transparent',
