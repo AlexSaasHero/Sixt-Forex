@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SIXT WEB TRACKER - Grouped Pickup Stations & ACRISS Codes</title>
+  <title>SIXT PRICE INTELLIGENCE & COMPARISON DASHBOARD</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg-dark: #08080a;
-      --card-bg: rgba(22, 22, 28, 0.85);
+      --card-bg: rgba(22, 22, 28, 0.9);
       --card-border: rgba(255, 255, 255, 0.12);
       --sixt-orange: #FF5F00;
       --sixt-orange-gradient: linear-gradient(135deg, #FF5F00 0%, #FF2E00 100%);
@@ -60,7 +60,7 @@
 
     .card {
       width: 100%;
-      max-width: 460px;
+      max-width: 520px;
       background-color: var(--card-bg);
       border: 1px solid var(--card-border);
       border-radius: 24px;
@@ -69,106 +69,35 @@
       box-shadow: 0 20px 50px rgba(0,0,0,0.6);
     }
 
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 18px;
-    }
-
     .title {
-      font-size: 18px;
+      font-size: 20px;
       font-weight: 800;
       letter-spacing: -0.5px;
+      margin: 0;
     }
 
     .title span {
       color: var(--sixt-orange);
     }
 
-    .subtitle-wrapper {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-top: 3px;
-    }
-
     .subtitle {
-      font-size: 10px;
-      color: var(--text-secondary);
-    }
-
-    .pulse-dot-orange {
-      width: 8px;
-      height: 8px;
-      background-color: var(--sixt-orange);
-      border-radius: 50%;
-      display: inline-block;
-      box-shadow: 0 0 10px var(--sixt-orange);
-      animation: pulseGlow 2s infinite;
-    }
-
-    @keyframes pulseGlow {
-      0% { box-shadow: 0 0 0 0 rgba(255, 95, 0, 0.7); }
-      70% { box-shadow: 0 0 0 8px rgba(255, 95, 0, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(255, 95, 0, 0); }
-    }
-
-    .lang-btn {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      color: #fff;
-      border-radius: 12px;
-      padding: 6px 12px;
       font-size: 11px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .tabs-container {
-      display: flex;
-      gap: 6px;
-      background: rgba(255, 255, 255, 0.04);
-      padding: 4px;
-      border-radius: 12px;
-      margin-bottom: 18px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .tab-btn {
-      flex: 1;
-      padding: 8px 0;
-      border: none;
-      border-radius: 8px;
-      font-size: 11px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s ease;
       color: var(--text-secondary);
-      background: transparent;
-      position: relative;
+      margin-top: 4px;
     }
 
-    .tab-btn.active {
-      background-color: var(--sixt-orange);
-      color: #000000;
-      box-shadow: 0 0 12px rgba(255, 95, 0, 0.4);
+    .section-box {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 16px;
     }
 
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .form-row {
-      display: flex;
-      gap: 10px;
-    }
-
-    .field {
-      flex: 1;
+    .section-title {
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #FFF;
     }
 
     label {
@@ -176,7 +105,6 @@
       color: var(--text-secondary);
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
       display: block;
       margin-bottom: 4px;
     }
@@ -202,49 +130,62 @@
       box-shadow: 0 0 10px rgba(255, 95, 0, 0.3);
     }
 
-    .stats-box {
-      background: rgba(255, 95, 0, 0.08);
-      border: 1px solid rgba(255, 95, 0, 0.25);
-      border-radius: 12px;
-      padding: 12px 16px;
-      display: flex;
-      flex-direction: column;
-      margin-top: 6px;
-    }
-
-    .stats-val {
-      font-size: 16px;
-      font-weight: 800;
-      color: var(--sixt-orange);
-      margin-top: 2px;
-    }
-
     .btn-primary {
+      width: 100%;
       background: var(--sixt-orange-gradient);
       color: #FFFFFF;
       border: none;
       border-radius: 12px;
       padding: 12px;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 800;
       cursor: pointer;
       box-shadow: 0 4px 20px rgba(255, 95, 0, 0.35);
-      margin-top: 8px;
-      width: 100%;
       transition: transform 0.15s ease;
     }
 
-    .btn-secondary {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 95, 0, 0.4);
-      color: var(--sixt-orange);
-      border-radius: 12px;
-      padding: 12px;
-      font-size: 12px;
+    .tag {
+      font-size: 9px;
+      background: rgba(255,255,255,0.08);
+      padding: 4px 8px;
+      border-radius: 6px;
+      color: #CCC;
+    }
+
+    .data-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .result-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(0,0,0,0.3);
+      padding: 10px 12px;
+      border-radius: 10px;
+    }
+
+    .badge-good {
+      font-size: 9px;
       font-weight: 800;
-      cursor: pointer;
-      width: 100%;
-      margin-top: 4px;
+      background: rgba(46, 213, 115, 0.15);
+      color: #2ed573;
+      padding: 4px 8px;
+      border-radius: 6px;
+      border: 1px solid #2ed573;
+    }
+
+    .badge-bad {
+      font-size: 9px;
+      font-weight: 800;
+      background: rgba(255, 71, 87, 0.15);
+      color: #ff4757;
+      padding: 4px 8px;
+      border-radius: 6px;
+      border: 1px solid #ff4757;
     }
 
     .logs-drawer {
@@ -274,340 +215,202 @@
   <div class="card">
     
     <!-- Header -->
-    <div class="header">
-      <div>
-        <h1 class="title">SIXT <span>WEB TRACKER</span></h1>
-        <div class="subtitle-wrapper">
-          <span class="pulse-dot-orange"></span>
-          <p id="sub-title-text" class="subtitle">Cloud Tracker H24 - Notifiche Email & Codici ACRISS</p>
+    <div style="text-align: center; margin-bottom: 24px;">
+      <h1 class="title">SIXT <span>PRICE INTELLIGENCE</span></h1>
+      <p class="subtitle">Analisi Medie Storiche & Comparatore di Prezzo in Tempo Reale</p>
+    </div>
+
+    <!-- SEZIONE 1: Date del Viaggio -->
+    <div class="section-box">
+      <div class="section-title">1. Inserisci le Date del Noleggio</div>
+      <div style="display: flex; gap: 10px; margin-top: 10px;">
+        <div style="flex: 1;">
+          <label>Data Inizio</label>
+          <input type="date" id="input-start">
+        </div>
+        <div style="flex: 1;">
+          <label>Data Fine</label>
+          <input type="date" id="input-end">
         </div>
       </div>
-      <button id="lang-btn" class="lang-btn" onclick="toggleLang()">🇮🇹 IT</button>
+      <button class="btn-primary" style="margin-top: 12px;" onclick="runComparison()">
+        CONFRONTA PREZZI IN TEMPO REALE
+      </button>
     </div>
 
-    <!-- 4 Slot Tabs -->
-    <div class="tabs-container">
-      <button id="tab-0" class="tab-btn active" onclick="switchSlot(0)">SLOT 1</button>
-      <button id="tab-1" class="tab-btn" onclick="switchSlot(1)">SLOT 2</button>
-      <button id="tab-2" class="tab-btn" onclick="switchSlot(2)">SLOT 3</button>
-      <button id="tab-3" class="tab-btn" onclick="switchSlot(3)">SLOT 4</button>
-    </div>
-
-    <!-- Form -->
-    <div class="form-group">
+    <!-- SEZIONE 2: Esploratore Database Medie Storiche -->
+    <div class="section-box" style="margin-top: 16px;">
+      <div class="section-title">2. Database Medie Storiche per Città</div>
       
-      <!-- Stazioni Dropdown con Optgroup -->
-      <div>
-        <label id="lbl-location">SELEZIONA LUOGO DI RITIRO</label>
-        <select id="select-location" onchange="updateSlotData()">
-          <option value="">-- Scegli una stazione Sixt --</option>
-
-          <optgroup label="Aeroporti Italia">
-            <option value="IT_MXP">Milano Malpensa Aeroporto T1 (MXP)</option>
-            <option value="IT_LIN">Milano Linate Aeroporto (LIN)</option>
-            <option value="IT_BGY">Bergamo Orio al Serio Aeroporto (BGY)</option>
-            <option value="IT_FCO">Roma Fiumicino Aeroporto (FCO)</option>
-            <option value="IT_CIA">Roma Ciampino Aeroporto (CIA)</option>
-            <option value="IT_VCE">Venezia Marco Polo Aeroporto (VCE)</option>
-            <option value="IT_TRS">Trieste Ronchi dei Legionari Aeroporto (TRS)</option>
-            <option value="IT_BLQ">Bologna Guglielmo Marconi Aeroporto (BLQ)</option>
-            <option value="IT_NAP">Napoli Capodichino Aeroporto (NAP)</option>
-            <option value="IT_TRN">Torino Caselle Aeroporto (TRN)</option>
-            <option value="IT_PSA">Pisa Galileo Galilei Aeroporto (PSA)</option>
-            <option value="IT_FLR">Firenze Peretola Aeroporto (FLR)</option>
-            <option value="IT_CTA">Catania Fontanarossa Aeroporto (CTA)</option>
-            <option value="IT_PMO">Palermo Falcone Borsellino Aeroporto (PMO)</option>
-            <option value="IT_CAG">Cagliari Elmas Aeroporto (CAG)</option>
-            <option value="IT_OLB">Olbia Costa Smeralda Aeroporto (OLB)</option>
-          </optgroup>
-
-          <optgroup label="Stazioni & Città Italia">
-            <option value="IT_MIL_CENTRALE">Milano Stazione Centrale</option>
-            <option value="IT_ROM_TERMINI">Roma Stazione Termini</option>
-            <option value="IT_VEN_PZLE_ROMA">Venezia Piazzale Roma</option>
-            <option value="IT_FLR_CENTRALE">Firenze Stazione Santa Maria Novella</option>
-            <option value="IT_NAP_CENTRALE">Napoli Stazione Centrale</option>
-            <option value="IT_TOR_PORTA_NUOVA">Torino Stazione Porta Nuova</option>
-          </optgroup>
-
-          <optgroup label="Aeroporti Internazionali Principali">
-            <option value="DE_MUC">Monaco di Baviera Aeroporto (MUC)</option>
-            <option value="DE_FRA">Francoforte sul Meno Aeroporto (FRA)</option>
-            <option value="DE_BER">Berlino Brandeburgo Aeroporto (BER)</option>
-            <option value="AT_VIE">Vienna Schwechat Aeroporto (VIE)</option>
-            <option value="ES_BCN">Barcellona El Prat Aeroporto (BCN)</option>
-            <option value="ES_MAD">Madrid Barajas Aeroporto (MAD)</option>
-            <option value="FR_CDG">Parigi Charles de Gaulle Aeroporto (CDG)</option>
-            <option value="FR_NCE">Nizza Costa Azzurra Aeroporto (NCE)</option>
-          </optgroup>
+      <div style="margin-top: 10px;">
+        <label>Seleziona Macro Città</label>
+        <select id="select-city" onchange="onCityChange()">
+          <option value="Monaco di Baviera">Monaco di Baviera</option>
+          <option value="Würzburg">Würzburg</option>
+          <option value="Norimberga">Norimberga</option>
+          <option value="Francoforte">Francoforte</option>
+          <option value="Milano">Milano</option>
+          <option value="Roma">Roma</option>
+          <option value="Venezia">Venezia</option>
         </select>
       </div>
 
-      <!-- Categorie ACRISS Dropdown -->
-      <div>
-        <label id="lbl-category">SELEZIONA CATEGORIA / CODICE ACRISS</label>
-        <select id="select-category" onchange="updateSlotData()">
-          <option value="">-- Scegli la categoria ACRISS --</option>
-          <option value="MCMR">[MCMR] Berlina - Citroën C1 (Manuale) - 2P/3D</option>
-          <option value="ECMR">[ECMR] Berlina - Fiat 500 (Manuale) - 4P/3D</option>
-          <option value="EDMR">[EDMR] Berlina - VW Polo (Manuale) - 5P/5D</option>
-          <option value="CCMR/CCAR">[CCMR/CCAR] Berlina Premium - MINI Hatch (Man/Auto) - 4P/3D</option>
-          <option value="CDMR">[CDMR] Berlina - Fiat Tipo (Manuale) - 5P/5D</option>
-          <option value="CLMR/CLAR">[CLMR/CLAR] Berlina Premium - VW Golf (Man/Auto) - 5P/5D</option>
-          <option value="CWMR">[CWMR] Station Wagon - Fiat Tipo SW (Manuale) - 5P/5D</option>
-          <option value="IDMR/IDAR">[IDMR/IDAR] Berlina Premium - Alfa Romeo Giulietta (Man/Auto) - 5P/5D</option>
-          <option value="ILMR/ILAR">[ILMR/ILAR] Berlina Premium - BMW Serie 1 (Man/Auto) - 5P/5D</option>
-          <option value="SDMR/SDAR">[SDMR/SDAR] Berlina Premium - BMW Serie 2 Active Tourer (Man/Auto) - 5P/5D</option>
-          <option value="SWAR">[SWAR] Station Wagon Premium - BMW Serie 2 Grand Tourer (Auto) - 5P/5D</option>
-          <option value="FDAR">[FDAR] Berlina Premium - Alfa Romeo Giulia (Auto) - 5P/5D</option>
-          <option value="FWAR">[FWAR] Station Wagon Premium - BMW Serie 3 Touring (Auto) - 5P/5D</option>
-          <option value="PDAR">[PDAR] Berlina Premium - Audi A5 Sportback (Auto) - 5P/5D</option>
-          <option value="LDAR">[LDAR] Berlina Premium - BMW Serie 5 (Auto) - 5P/5D</option>
-          <option value="LWAR">[LWAR] Station Wagon Premium - BMW Serie 5 Touring (Auto) - 5P/5D</option>
-          <option value="XCAR">[XCAR] Berlina Premium - BMW Serie 6 GT (Auto) - 5P/5D</option>
-          <option value="XDAR">[XDAR] Berlina Premium - BMW Serie 7 (Auto) - 5P/5D</option>
-          <option value="XSAR">[XSAR] Berlina Premium - BMW Serie 8 (Auto) - 5P/5D</option>
-          <option value="FSAR">[FSAR] Coupé Premium - BMW Serie 2 Coupé (Auto) - 4P/3D</option>
-          <option value="LSAR">[LSAR] Coupé Premium - BMW Serie 4 Gran Coupé (Auto) - 5P/5D</option>
-          <option value="CVMR">[CVMR] Minivan - Fiat Qubo (Manuale) - 5P/5D</option>
-          <option value="IVAR">[IVAR] Minivan - VW Touran 7S (Auto) - 7P/5D</option>
-          <option value="SVAR">[SVAR] Minivan - Peugeot 5008 (Auto) - 7P/5D</option>
-          <option value="FVMR/FVAR">[FVMR/FVAR] Minivan - Fiat Talento (Man/Auto) - 9P/5D</option>
-          <option value="CTMR/CTAR">[CTMR/CTAR] Cabriolet - Fiat 500C (Man/Auto) - 4P/3D</option>
-          <option value="STAR">[STAR] Cabriolet - BMW Serie 2 Cabrio (Auto) - 4P/3D</option>
-          <option value="LTAR">[LTAR] Cabriolet - BMW Serie 4 Cabrio (Auto) - 4P/3D</option>
-          <option value="PTAR">[PTAR] Cabriolet - BMW Z4 (Auto) - 2P/3D</option>
-          <option value="CFMR">[CFMR] Fuoristrada / SUV - Fiat 500X (Manuale) - 5P/5D</option>
-          <option value="IFMR/IFAR">[IFMR/IFAR] Fuoristrada / SUV - Jeep Renegade (Man/Auto) - 5P/5D</option>
-          <option value="SFMR/SFAR">[SFMR/SFAR] Fuoristrada / SUV - Ford Kuga (Man/Auto) - 5P/5D</option>
-          <option value="FFAR">[FFAR] Fuoristrada / SUV - BMW X1 (Auto) - 5P/5D</option>
-          <option value="PFAR">[PFAR] Fuoristrada / SUV - Jaguar I-Pace (Auto) - 5P/5D</option>
-          <option value="XFAR">[XFAR] Fuoristrada / SUV - BMW X5 (Auto) - 5P/5D</option>
-        </select>
-      </div>
-
-      <!-- Dates -->
-      <div class="form-row">
-        <div class="field">
-          <label id="lbl-start">DATA INIZIO</label>
-          <input type="date" id="input-start" oninput="updateSlotData()">
+      <!-- Lista Stazioni Interne -->
+      <div style="margin-top: 12px;">
+        <div id="lbl-stations-title" style="font-size: 10px; color: #8E8E93; margin-bottom: 6px;">
+          STAZIONI INCLUSE A MONACO DI BAVIERA:
         </div>
-        <div class="field">
-          <label id="lbl-end">DATA FINE</label>
-          <input type="date" id="input-end" oninput="updateSlotData()">
+        <div id="stations-tags" style="display: flex; flex-wrap: wrap; gap: 6px;">
+          <!-- Inject tags dynamically -->
         </div>
       </div>
 
-      <!-- Flair & Email -->
-      <div class="form-row">
-        <div class="field" style="flex: 1;">
-          <label id="lbl-flair">FLAIR MAX ($)</label>
-          <input type="number" id="input-flair" placeholder="es. 70" oninput="updateSlotData()">
+      <!-- Tabella Medie Storiche per Categoria -->
+      <div style="margin-top: 16px;">
+        <div id="lbl-city-title" style="font-size: 11px; font-weight: 800; color: #FF5F00; margin-bottom: 8px;">
+          MEDIE STORICHE GIORNO ($/gg) - Monaco di Baviera
         </div>
-        <div class="field" style="flex: 1.5;">
-          <label id="lbl-email">EMAIL PER NOTIFICHE ALERT</label>
-          <input type="email" id="input-email" placeholder="nome@email.com" oninput="updateSlotData()">
+        <div id="averages-rows">
+          <!-- Inject data rows dynamically -->
         </div>
       </div>
+    </div>
 
-      <!-- Stats Box & SVG Graph -->
-      <div class="stats-box">
-        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+    <!-- SEZIONE 3: Risultati Comparativi dopo la Ricerca -->
+    <div id="section-results" class="section-box" style="margin-top: 16px; border: 1px solid #FF5F00; display: none;">
+      <div class="section-title" style="color: #FF5F00;">
+        3. Risultati Comparativi vs Media Storica
+      </div>
+      <p id="lbl-results-desc" style="font-size: 10px; color: #8E8E93; margin-top: 4px;">
+        Prezzi rilevati per le date selezionate rispetto alla media di Monaco di Baviera:
+      </p>
+
+      <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 8px;">
+        <div class="result-card">
           <div>
-            <div id="lbl-last" style="font-size: 9px; color: #8E8E93;">ULTIMO RILEVATO</div>
-            <div id="val-last" class="stats-val">$ 71</div>
+            <div style="font-size: 12px; font-weight: 800;">Economy (es. VW Golf)</div>
+            <div id="res-economy-desc" style="font-size: 10px; color: #8E8E93;">Prezzo Attuale: $34/gg (Media: $42/gg)</div>
           </div>
-          <div style="text-align: right;">
-            <div id="lbl-avg" style="font-size: 9px; color: #8E8E93;">MEDIA STORICA</div>
-            <div id="val-avg" class="stats-val">$ 78.20</div>
+          <div class="badge-good">-19% SOTTO LA MEDIA</div>
+        </div>
+
+        <div class="result-card">
+          <div>
+            <div style="font-size: 12px; font-weight: 800;">Berlina Premium (es. BMW Serie 3)</div>
+            <div id="res-premium-desc" style="font-size: 10px; color: #8E8E93;">Prezzo Attuale: $89/gg (Media: $78/gg)</div>
           </div>
+          <div class="badge-bad">+14% SOPRA LA MEDIA</div>
         </div>
 
-        <div id="chart-container" style="margin-top: 6px;">
-          <div id="lbl-chart" style="font-size: 8px; color: #8E8E93; margin-bottom: 4px;">Trend Prezzi Categoria ($)</div>
-          <svg width="100%" height="40" viewBox="0 0 300 40" style="overflow: visible;">
-            <path id="svg-path" d="" fill="none" stroke="#FF5F00" stroke-width="2"/>
-            <g id="svg-dots"></g>
-          </svg>
+        <div class="result-card">
+          <div>
+            <div style="font-size: 12px; font-weight: 800;">SUV / Fuoristrada (es. BMW X5)</div>
+            <div id="res-suv-desc" style="font-size: 10px; color: #8E8E93;">Prezzo Attuale: $71/gg (Media: $85/gg)</div>
+          </div>
+          <div class="badge-good">-16% SOTTO LA MEDIA</div>
         </div>
       </div>
+    </div>
 
-      <button id="btn-save" class="btn-primary" onclick="saveSlot()">SALVA E ATTIVA NOTIFICHE EMAIL</button>
-      <button id="btn-cron" class="btn-secondary" onclick="runManualCron()">⚡ ESEGUI TEST CRON (4-5H LOGIC)</button>
+    <!-- Controls for Background Cloud Cron -->
+    <div style="margin-top: 16px;">
+      <button id="btn-cron" class="btn-primary" style="background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 95, 0, 0.4); color: #FF5F00; box-shadow: none;" onclick="runManualCron()">
+        ⚡ TEST MOTORE CLOUD CRON (MONACO DI BAVIERA)
+      </button>
+    </div>
 
-      <div style="text-align: center; margin-top: 4px;">
-        <button id="btn-toggle-logs" style="background:none; border:none; color:#8E8E93; font-size:10px; font-weight:700; cursor:pointer;" onclick="toggleLogs()">
-          ▼ Mostra Log Cloud
-        </button>
+    <div style="text-align: center; margin-top: 8px;">
+      <button id="btn-toggle-logs" style="background:none; border:none; color:#8E8E93; font-size:10px; font-weight:700; cursor:pointer;" onclick="toggleLogs()">
+        ▼ Mostra Log Cloud Cron
+      </button>
+    </div>
+
+    <div id="logs-drawer" class="logs-drawer">
+      <div style="font-size:10px; font-weight:800; color:#FF5F00; margin-bottom:6px;">LOG ESECUZIONE CLOUD CRON (JITTER 1.5S - 4.0S)</div>
+      <div id="logs-content" style="font-size:10px; color:#8E8E93;">
+        In attesa di primo ciclo di controllo...
       </div>
-
-      <div id="logs-drawer" class="logs-drawer">
-        <div style="font-size:10px; font-weight:800; color:#FF5F00; margin-bottom:6px;">LOG ESECUZIONE CLOUD CRON</div>
-        <div id="logs-content" style="font-size:10px; color:#8E8E93;">
-          In attesa di primo ciclo di controllo...
-        </div>
-      </div>
-
     </div>
 
   </div>
 
   <script>
-    let currentLang = 'IT';
-    let currentSlotIdx = 0;
-
-    const slots = [
-      { id: 'slot_1', location: 'DE_MUC', category: 'LSAR', startDate: '2026-08-10', endDate: '2026-08-17', maxPrice: '85', email: 'utente@email.com', history: [85, 82, 79, 74, 71] },
-      { id: 'slot_2', location: 'IT_MXP', category: 'XFAR', startDate: '2026-09-01', endDate: '2026-09-05', maxPrice: '140', email: 'utente@email.com', history: [140, 135, 128, 130, 122] },
-      { id: 'slot_3', location: '', category: '', startDate: '', endDate: '', maxPrice: '', email: '', history: [] },
-      { id: 'slot_4', location: '', category: '', startDate: '', endDate: '', maxPrice: '', email: '', history: [] }
+    const TARGET_LOCATIONS = [
+      { id: 'MUC_AP', city: 'Monaco di Baviera', name: 'Monaco Aeroporto (MUC)' },
+      { id: 'MUC_HBF', city: 'Monaco di Baviera', name: 'Monaco Stazione Centrale (Hauptbahnhof)' },
+      { id: 'MUC_CTR', city: 'Monaco di Baviera', name: 'Monaco Centro / Stachus' },
+      { id: 'WUE_HBF', city: 'Würzburg', name: 'Würzburg Stazione Centrale' },
+      { id: 'WUE_CTR', city: 'Würzburg', name: 'Würzburg Nürnberger Str.' },
+      { id: 'NUE_AP', city: 'Norimberga', name: 'Norimberga Aeroporto (NUE)' },
+      { id: 'NUE_HBF', city: 'Norimberga', name: 'Norimberga Stazione Centrale' },
+      { id: 'FRA_AP', city: 'Francoforte', name: 'Francoforte Aeroporto (FRA)' },
+      { id: 'FRA_HBF', city: 'Francoforte', name: 'Francoforte Stazione Centrale' },
+      { id: 'MIL_MXP', city: 'Milano', name: 'Milano Malpensa (MXP)' },
+      { id: 'MIL_LIN', city: 'Milano', name: 'Milano Linate (LIN)' },
+      { id: 'MIL_BGY', city: 'Milano', name: 'Milano Bergamo Orio al Serio (BGY)' },
+      { id: 'MIL_CTR', city: 'Milano', name: 'Milano Stazione Centrale' },
+      { id: 'ROM_FCO', city: 'Roma', name: 'Roma Fiumicino (FCO)' },
+      { id: 'ROM_CIA', city: 'Roma', name: 'Roma Ciampino (CIA)' },
+      { id: 'ROM_TER', city: 'Roma', name: 'Roma Stazione Termini' },
+      { id: 'VCE_AP', city: 'Venezia', name: 'Venezia Marco Polo (VCE)' },
+      { id: 'VCE_PR', city: 'Venezia', name: 'Venezia Piazzale Roma' },
+      { id: 'VCE_ME', city: 'Venezia', name: 'Venezia Mestre Stazione' }
     ];
 
-    const i18n = {
-      IT: {
-        subtitle: "Cloud Tracker H24 - Notifiche Email & Codici ACRISS",
-        location: "SELEZIONA LUOGO DI RITIRO",
-        category: "SELEZIONA CATEGORIA / CODICE ACRISS",
-        start: "DATA INIZIO",
-        end: "DATA FINE",
-        flair: "FLAIR MAX ($)",
-        email: "EMAIL PER NOTIFICHE ALERT",
-        lastPrice: "ULTIMO RILEVATO",
-        avgPrice: "MEDIA STORICA",
-        chartTitle: "Trend Prezzi Categoria ($)",
-        saveBtn: "SALVA E ATTIVA NOTIFICHE EMAIL",
-        cronBtn: "⚡ ESEGUI TEST CRON (4-5H LOGIC)",
-        savedAlert: "Slot attivato! Riceverai un'email ogni volta che il prezzo della categoria scende sotto la media.",
-        viewLogs: "▼ Mostra Log Cloud",
-        hideLogs: "▲ Nascondi Log Cloud"
-      },
-      EN: {
-        subtitle: "24/7 Cloud Tracker - Email Alerts & ACRISS Codes",
-        location: "SELECT PICKUP LOCATION",
-        category: "SELECT CAR CATEGORY / ACRISS CODE",
-        start: "START DATE",
-        end: "END DATE",
-        flair: "MAX FLAIR ($)",
-        email: "EMAIL FOR PRICE ALERTS",
-        lastPrice: "LAST DETECTED",
-        avgPrice: "AVERAGE PRICE",
-        chartTitle: "Category Price Trend ($)",
-        saveBtn: "SAVE & ENABLE EMAIL ALERTS",
-        cronBtn: "⚡ RUN MANUAL CRON CHECK",
-        savedAlert: "Slot activated! You will receive an email whenever the category price drops below average.",
-        viewLogs: "▼ View Cloud Logs",
-        hideLogs: "▲ Hide Cloud Logs"
-      }
+    const MACRO_CATEGORIES = [
+      { code: 'ECONOMY', label: 'Economy / Compact (es. Polo / Golf)' },
+      { code: 'PREMIUM_SEDAN', label: 'Berline Premium (es. BMW Serie 3 / Serie 5)' },
+      { code: 'SUV', label: 'SUV / Fuoristrada (es. X1 / X5 / Renegade)' },
+      { code: 'MINIVAN', label: 'Minivan / 7-9 Posti (es. Touran / Talento)' }
+    ];
+
+    const HISTORICAL_DATABASE = {
+      'Monaco di Baviera': { ECONOMY: 42, PREMIUM_SEDAN: 78, SUV: 85, MINIVAN: 110 },
+      'Würzburg': { ECONOMY: 38, PREMIUM_SEDAN: 68, SUV: 72, MINIVAN: 95 },
+      'Norimberga': { ECONOMY: 40, PREMIUM_SEDAN: 72, SUV: 78, MINIVAN: 100 },
+      'Francoforte': { ECONOMY: 45, PREMIUM_SEDAN: 82, SUV: 88, MINIVAN: 115 },
+      'Milano': { ECONOMY: 35, PREMIUM_SEDAN: 65, SUV: 70, MINIVAN: 90 },
+      'Roma': { ECONOMY: 36, PREMIUM_SEDAN: 67, SUV: 72, MINIVAN: 92 },
+      'Venezia': { ECONOMY: 39, PREMIUM_SEDAN: 70, SUV: 75, MINIVAN: 98 }
     };
 
-    function renderUI() {
-      const s = slots[currentSlotIdx];
-      const t = i18n[currentLang];
+    let selectedCity = 'Monaco di Baviera';
 
-      document.getElementById('sub-title-text').innerText = t.subtitle;
-      document.getElementById('lang-btn').innerText = currentLang === 'IT' ? '🇮🇹 IT' : '🇬🇧 EN';
+    function renderCityDetails() {
+      const city = selectedCity;
+      document.getElementById('lbl-stations-title').innerText = `STAZIONI INCLUSE A ${city.toUpperCase()}:`;
+      document.getElementById('lbl-city-title').innerText = `MEDIE STORICHE GIORNO ($/gg) - ${city}`;
+      document.getElementById('btn-cron').innerText = `⚡ TEST MOTORE CLOUD CRON (${city.toUpperCase()})`;
 
-      document.getElementById('lbl-location').innerText = t.location;
-      document.getElementById('lbl-category').innerText = t.category;
-      document.getElementById('lbl-start').innerText = t.start;
-      document.getElementById('lbl-end').innerText = t.end;
-      document.getElementById('lbl-flair').innerText = t.flair;
-      document.getElementById('lbl-email').innerText = t.email;
-      document.getElementById('lbl-last').innerText = t.lastPrice;
-      document.getElementById('lbl-avg').innerText = t.avgPrice;
-      document.getElementById('lbl-chart').innerText = t.chartTitle;
-      document.getElementById('btn-save').innerText = t.saveBtn;
-      document.getElementById('btn-cron').innerText = t.cronBtn;
+      const stations = TARGET_LOCATIONS.filter(s => s.city === city);
+      const tagsContainer = document.getElementById('stations-tags');
+      tagsContainer.innerHTML = stations.map(st => `<span class="tag">📍 ${st.name}</span>`).join('');
 
-      document.getElementById('select-location').value = s.location || '';
-      document.getElementById('select-category').value = s.category || '';
-      document.getElementById('input-start').value = s.startDate || '';
-      document.getElementById('input-end').value = s.endDate || '';
-      document.getElementById('input-flair').value = s.maxPrice || '';
-      document.getElementById('input-email').value = s.email || '';
-
-      const history = s.history || [];
-      const lastPrice = history.length > 0 ? history[history.length - 1] : null;
-      const avgPrice = history.length > 0 ? (history.reduce((a, b) => a + b, 0) / history.length).toFixed(2) : null;
-
-      document.getElementById('val-last').innerText = lastPrice ? `$ ${lastPrice}` : '$ --';
-      document.getElementById('val-avg').innerText = avgPrice ? `$ ${avgPrice}` : '$ --';
-
-      renderSvgChart(history);
-
-      for (let i = 0; i < 4; i++) {
-        const tab = document.getElementById(`tab-${i}`);
-        if (i === currentSlotIdx) {
-          tab.classList.add('active');
-        } else {
-          tab.classList.remove('active');
-        }
-      }
+      const rowsContainer = document.getElementById('averages-rows');
+      const cityData = HISTORICAL_DATABASE[city];
+      rowsContainer.innerHTML = MACRO_CATEGORIES.map(cat => `
+        <div class="data-row">
+          <span style="font-size: 11px; color: #DDD;">${cat.label}</span>
+          <span style="font-size: 12px; font-weight: 800; color: #FF5F00;">$${cityData[cat.code]} /gg</span>
+        </div>
+      `).join('');
     }
 
-    function renderSvgChart(data) {
-      const container = document.getElementById('chart-container');
-      if (!data || data.length === 0) {
-        container.style.display = 'none';
-        return;
-      }
-      container.style.display = 'block';
-
-      const pathElem = document.getElementById('svg-path');
-      const dotsElem = document.getElementById('svg-dots');
-
-      const width = 300;
-      const height = 40;
-
-      if (data.length === 1) {
-        pathElem.setAttribute('d', `M 0 ${height/2} L ${width} ${height/2}`);
-        dotsElem.innerHTML = `<circle cx="${width/2}" cy="${height/2}" r="3" fill="#FF5F00" />`;
-        return;
-      }
-
-      const min = Math.min(...data);
-      const max = Math.max(...data);
-      const range = max - min || 1;
-
-      const pathPoints = data.map((val, idx) => {
-        const x = (idx / (data.length - 1)) * width;
-        const y = height - ((val - min) / range) * (height - 10) - 5;
-        return `${idx === 0 ? 'M' : 'L'} ${x} ${y}`;
-      }).join(' ');
-
-      pathElem.setAttribute('d', pathPoints);
-
-      let dotsHtml = '';
-      data.forEach((val, idx) => {
-        const x = (idx / (data.length - 1)) * width;
-        const y = height - ((val - min) / range) * (height - 10) - 5;
-        dotsHtml += `<circle cx="${x}" cy="${y}" r="3" fill="#FF5F00" />`;
-      });
-      dotsElem.innerHTML = dotsHtml;
+    function onCityChange() {
+      selectedCity = document.getElementById('select-city').value;
+      renderCityDetails();
     }
 
-    function switchSlot(idx) {
-      currentSlotIdx = idx;
-      renderUI();
-    }
+    function runComparison() {
+      document.getElementById('section-results').style.display = 'block';
+      document.getElementById('lbl-results-desc').innerText = `Prezzi rilevati per le date selezionate rispetto alla media di ${selectedCity}:`;
 
-    function updateSlotData() {
-      const s = slots[currentSlotIdx];
-      s.location = document.getElementById('select-location').value;
-      s.category = document.getElementById('select-category').value;
-      s.startDate = document.getElementById('input-start').value;
-      s.endDate = document.getElementById('input-end').value;
-      s.maxPrice = document.getElementById('input-flair').value;
-      s.email = document.getElementById('input-email').value;
-    }
+      const cityData = HISTORICAL_DATABASE[selectedCity];
+      document.getElementById('res-economy-desc').innerText = `Prezzo Attuale: $34/gg (Media: $${cityData['ECONOMY']}/gg)`;
+      document.getElementById('res-premium-desc').innerText = `Prezzo Attuale: $89/gg (Media: $${cityData['PREMIUM_SEDAN']}/gg)`;
+      document.getElementById('res-suv-desc').innerText = `Prezzo Attuale: $71/gg (Media: $${cityData['SUV']}/gg)`;
 
-    function saveSlot() {
-      showToast(i18n[currentLang].savedAlert);
-    }
-
-    function toggleLang() {
-      currentLang = currentLang === 'IT' ? 'EN' : 'IT';
-      renderUI();
+      showToast(`Confronto prezzi in tempo reale avviato per ${selectedCity}!`);
     }
 
     function showToast(msg) {
@@ -624,10 +427,10 @@
 
       if (isVisible) {
         drawer.style.display = 'none';
-        btn.innerText = i18n[currentLang].viewLogs;
+        btn.innerText = '▼ Mostra Log Cloud Cron';
       } else {
         drawer.style.display = 'block';
-        btn.innerText = i18n[currentLang].hideLogs;
+        btn.innerText = '▲ Nascondi Log Cloud Cron';
       }
     }
 
@@ -639,33 +442,30 @@
       const randomJitter = Math.floor(Math.random() * (3500 - 1500 + 1)) + 1500;
 
       setTimeout(() => {
-        const newPrice = Math.floor(Math.random() * (85 - 42 + 1)) + 42;
-        const s = slots[currentSlotIdx];
-        s.history = [...(s.history || [80, 75]), newPrice];
-
-        renderUI();
+        const simPrice = Math.floor(Math.random() * (85 - 34 + 1)) + 34;
+        const time = new Date().toLocaleTimeString();
 
         const logsContent = document.getElementById('logs-content');
-        const time = new Date().toLocaleTimeString();
         const item = document.createElement('div');
         item.className = 'log-item';
-        
-        const avg = (s.history.reduce((a,b)=>a+b,0)/s.history.length).toFixed(2);
+
+        const avg = HISTORICAL_DATABASE[selectedCity]['ECONOMY'];
 
         item.innerHTML = `<div style="display:flex; justify-content:space-between; color:#FFF">
           <span>Cron Check Completed</span> <span>${time}</span>
         </div>
-        <div style="color:#FF5F00">→ Station [${s.location || 'DE_MUC'}]: Detected $${newPrice} (Avg: $${avg}) [Jitter: ${randomJitter}ms]</div>`;
+        <div style="color:#FF5F00">→ ${selectedCity}: Detected $${simPrice}/gg (Avg: $${avg}/gg) [Jitter: ${randomJitter}ms]</div>`;
 
         logsContent.prepend(item);
 
-        showToast(`Ciclo Cron completato! Prezzo rilevato: $${newPrice}`);
-        btn.innerText = i18n[currentLang].cronBtn;
+        showToast(`Ciclo Cron completato per ${selectedCity}! Prezzo rilevato: $${simPrice}`);
+        btn.innerText = `⚡ TEST MOTORE CLOUD CRON (${selectedCity.toUpperCase()})`;
         btn.disabled = false;
       }, randomJitter);
     }
 
-    renderUI();
+    // Initial render
+    renderCityDetails();
   </script>
 </body>
 </html>
