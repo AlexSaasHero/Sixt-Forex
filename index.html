@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SIXT PRICE INTELLIGENCE - ALL STATIONS VIEW & FILTER</title>
+  <title>SIXT PRICE INTELLIGENCE - MULTILANGUAGE & CAR-RATING FEEDBACK</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -69,6 +69,38 @@
       box-shadow: 0 20px 50px rgba(0,0,0,0.6);
     }
 
+    .icon-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #fff;
+      border-radius: 10px;
+      padding: 6px 12px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .lang-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #fff;
+      border-radius: 10px;
+      padding: 6px 12px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .modal-box {
+      background: rgba(15, 15, 20, 0.95);
+      border: 1px solid var(--sixt-orange);
+      border-radius: 16px;
+      padding: 14px;
+      margin-bottom: 16px;
+      box-shadow: 0 10px 30px rgba(255, 95, 0, 0.2);
+      display: none;
+    }
+
     .title {
       font-size: 20px;
       font-weight: 800;
@@ -109,7 +141,7 @@
       margin-bottom: 4px;
     }
 
-    input, select {
+    input, select, textarea {
       width: 100%;
       background-color: rgba(255, 255, 255, 0.06);
       border: 1px solid rgba(255, 255, 255, 0.12);
@@ -119,13 +151,14 @@
       font-size: 12px;
       outline: none;
       transition: all 0.2s ease;
+      font-family: inherit;
     }
 
     select {
       background-color: #16161c;
     }
 
-    input:focus, select:focus {
+    input:focus, select:focus, textarea:focus {
       border-color: var(--sixt-orange);
       box-shadow: 0 0 10px rgba(255, 95, 0, 0.3);
     }
@@ -174,6 +207,16 @@
       border: 1px solid #ff4757;
     }
 
+    .car-star {
+      font-size: 18px;
+      cursor: pointer;
+      transition: transform 0.1s ease;
+    }
+
+    .car-star.unselected {
+      filter: grayscale(100%) opacity(0.3);
+    }
+
     .logs-drawer {
       background: rgba(0, 0, 0, 0.4);
       border: 1px solid rgba(255, 255, 255, 0.08);
@@ -200,19 +243,49 @@
 
   <div class="card">
     
+    <!-- Top Navigation Bar -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+      <button class="icon-btn" onclick="toggleFeedbackModal()" title="Feedback">⋮</button>
+      <button id="lang-btn" class="lang-btn" onclick="toggleLang()">🇮🇹 IT</button>
+    </div>
+
     <!-- Header -->
     <div style="text-align: center; margin-bottom: 20px;">
       <h1 class="title">SIXT <span>PRICE INTELLIGENCE</span></h1>
-      <p class="subtitle">Panoramica Prezzi Città & Filtro Stazioni Specifiche</p>
+      <p id="lbl-subtitle" class="subtitle">Panoramica Prezzi Città & Filtro Stazioni</p>
+    </div>
+
+    <!-- MODALE FEEDBACK -->
+    <div id="feedback-modal" class="modal-box">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <span id="lbl-feedback-title" style="font-size: 12px; font-weight: 800; color: #FF5F00;">Lascia un Feedback</span>
+        <button onclick="toggleFeedbackModal()" style="background: none; border: none; color: #8E8E93; cursor: pointer; font-size: 14px;">✕</button>
+      </div>
+
+      <input type="text" id="fb-username" placeholder="Il tuo Username (es. @tuo_handle)">
+
+      <div style="margin-top: 10px;">
+        <div id="lbl-rating" style="font-size: 10px; color: #8E8E93; margin-bottom: 4px;">Valutazione dell'esperienza:</div>
+        <div style="display: flex; gap: 8px;">
+          <span class="car-star" onclick="setCarRating(1)">🚗</span>
+          <span class="car-star" onclick="setCarRating(2)">🚗</span>
+          <span class="car-star" onclick="setCarRating(3)">🚗</span>
+          <span class="car-star" onclick="setCarRating(4)">🚗</span>
+          <span class="car-star" onclick="setCarRating(5)">🚗</span>
+        </div>
+      </div>
+
+      <textarea id="fb-comment" placeholder="Scrivi qui cosa ne pensi o come possiamo migliorare..." style="min-height: 60px; margin-top: 10px; resize: vertical;"></textarea>
+
+      <button id="btn-submit-fb" class="btn-primary" style="margin-top: 10px;" onclick="submitFeedback()">INVIA FEEDBACK</button>
     </div>
 
     <!-- CONTROLLI E FILTRI -->
     <div class="section-box">
-      <div class="section-title">1. Seleziona Città e Categoria</div>
+      <div id="lbl-sec1" class="section-title">1. Seleziona Città e Categoria</div>
 
-      <!-- Macro Città -->
       <div style="margin-top: 10px;">
-        <label>Macro Città</label>
+        <label id="lbl-macro-city">Macro Città</label>
         <select id="select-city" onchange="handleCityChange()">
           <option value="Monaco di Baviera">Monaco di Baviera</option>
           <option value="Würzburg">Würzburg</option>
@@ -224,48 +297,45 @@
         </select>
       </div>
 
-      <!-- Filtro Stazione Specifica (Opzionale) -->
       <div style="margin-top: 10px;">
-        <label>Filtra Stazione (Opzionale)</label>
+        <label id="lbl-filter-station">Filtra Stazione (Opzionale)</label>
         <select id="select-station">
           <!-- Dynamically populated -->
         </select>
       </div>
 
-      <!-- Categoria ACRISS -->
       <div style="margin-top: 10px;">
-        <label>Categoria Veicolo / Codice ACRISS</label>
+        <label id="lbl-category">Categoria Veicolo / Codice ACRISS</label>
         <select id="select-category">
           <!-- Dynamically populated -->
         </select>
       </div>
 
-      <!-- Date -->
       <div style="display: flex; gap: 10px; margin-top: 10px;">
         <div style="flex: 1;">
-          <label>Data Inizio</label>
+          <label id="lbl-start-date">Data Inizio</label>
           <input type="date" id="input-start">
         </div>
         <div style="flex: 1;">
-          <label>Data Fine</label>
+          <label id="lbl-end-date">Data Fine</label>
           <input type="date" id="input-end">
         </div>
       </div>
 
-      <button class="btn-primary" style="margin-top: 14px;" onclick="runComparison()">
+      <button id="btn-search" class="btn-primary" style="margin-top: 14px;" onclick="runComparison()">
         MOSTRA PREZZI E COMPARAZIONE
       </button>
     </div>
 
-    <!-- RISULTATI PER TUTTE LE STAZIONI -->
+    <!-- RISULTATI -->
     <div id="section-results" class="section-box" style="margin-top: 16px; border: 1px solid #FF5F00; display: none;">
       <div class="section-title" style="color: #FF5F00; display: flex; justify-content: space-between;">
-        <span id="res-category-code">2. Risultati per [CLMR/CLAR]</span>
+        <span id="res-sec2-title">2. Risultati per [CLMR/CLAR]</span>
         <span id="res-city-name" style="color: #FFF;">Monaco di Baviera</span>
       </div>
 
       <div id="results-list" style="margin-top: 12px; display: flex; flex-direction: column; gap: 10px;">
-        <!-- Dynamically injected station cards -->
+        <!-- Dynamically injected -->
       </div>
     </div>
 
@@ -283,7 +353,7 @@
     </div>
 
     <div id="logs-drawer" class="logs-drawer">
-      <div style="font-size:10px; font-weight:800; color:#FF5F00; margin-bottom:6px;">LOG ESECUZIONE CLOUD CRON (JITTER 1.5S - 4.0S)</div>
+      <div id="lbl-cron-title" style="font-size:10px; font-weight:800; color:#FF5F00; margin-bottom:6px;">LOG ESECUZIONE CLOUD CRON (JITTER 1.5S - 4.0S)</div>
       <div id="logs-content" style="font-size:10px; color:#8E8E93;">
         In attesa di primo ciclo di controllo...
       </div>
@@ -292,83 +362,119 @@
   </div>
 
   <script>
+    let currentLang = 'IT';
+    let selectedCity = 'Monaco di Baviera';
+    let currentRating = 5;
+
     const CITY_STATIONS_MAP = {
       'Monaco di Baviera': [
-        { id: 'MUC_AP', name: 'Monaco Aeroporto (MUC)', type: 'Aeroporto', currentPrice: 42, avgPrice: 48 },
-        { id: 'MUC_HBF', name: 'Monaco Stazione Centrale (Hauptbahnhof)', type: 'Stazione', currentPrice: 38, avgPrice: 45 },
-        { id: 'MUC_CTR', name: 'Monaco Centro / Stachus', type: 'Città', currentPrice: 36, avgPrice: 43 },
-        { id: 'MUC_EAST', name: 'Monaco Ostbahnhof', type: 'Stazione', currentPrice: 37, avgPrice: 44 }
+        { id: 'MUC_AP', name: 'Monaco Aeroporto (MUC)', currentPrice: 42, avgPrice: 48 },
+        { id: 'MUC_HBF', name: 'Monaco Stazione Centrale', currentPrice: 38, avgPrice: 45 },
+        { id: 'MUC_CTR', name: 'Monaco Centro / Stachus', currentPrice: 36, avgPrice: 43 }
       ],
       'Würzburg': [
-        { id: 'WUE_HBF', name: 'Würzburg Stazione Centrale', type: 'Stazione', currentPrice: 34, avgPrice: 39 },
-        { id: 'WUE_CTR', name: 'Würzburg Nürnberger Str.', type: 'Città', currentPrice: 32, avgPrice: 37 }
+        { id: 'WUE_HBF', name: 'Würzburg Stazione Centrale', currentPrice: 34, avgPrice: 39 },
+        { id: 'WUE_CTR', name: 'Würzburg Nürnberger Str.', currentPrice: 32, avgPrice: 37 }
       ],
       'Norimberga': [
-        { id: 'NUE_AP', name: 'Norimberga Aeroporto (NUE)', type: 'Aeroporto', currentPrice: 39, avgPrice: 42 },
-        { id: 'NUE_HBF', name: 'Norimberga Stazione Centrale', type: 'Stazione', currentPrice: 35, avgPrice: 40 }
+        { id: 'NUE_AP', name: 'Norimberga Aeroporto (NUE)', currentPrice: 39, avgPrice: 42 },
+        { id: 'NUE_HBF', name: 'Norimberga Stazione Centrale', currentPrice: 35, avgPrice: 40 }
       ],
       'Francoforte': [
-        { id: 'FRA_AP', name: 'Francoforte Aeroporto (FRA)', type: 'Aeroporto', currentPrice: 46, avgPrice: 52 },
-        { id: 'FRA_HBF', name: 'Francoforte Stazione Centrale', type: 'Stazione', currentPrice: 41, avgPrice: 47 },
-        { id: 'FRA_WEST', name: 'Francoforte Ovest / Camberger Str.', type: 'Città', currentPrice: 39, avgPrice: 45 }
+        { id: 'FRA_AP', name: 'Francoforte Aeroporto (FRA)', currentPrice: 46, avgPrice: 52 },
+        { id: 'FRA_HBF', name: 'Francoforte Stazione Centrale', currentPrice: 41, avgPrice: 47 }
       ],
       'Milano': [
-        { id: 'MIL_MXP', name: 'Milano Malpensa (MXP)', type: 'Aeroporto', currentPrice: 35, avgPrice: 41 },
-        { id: 'MIL_LIN', name: 'Milano Linate (LIN)', type: 'Aeroporto', currentPrice: 37, avgPrice: 43 },
-        { id: 'MIL_BGY', name: 'Milano Bergamo Orio al Serio (BGY)', type: 'Aeroporto', currentPrice: 31, avgPrice: 38 },
-        { id: 'MIL_CTR', name: 'Milano Stazione Centrale', type: 'Stazione', currentPrice: 36, avgPrice: 42 }
+        { id: 'MIL_MXP', name: 'Milano Malpensa (MXP)', currentPrice: 35, avgPrice: 41 },
+        { id: 'MIL_LIN', name: 'Milano Linate (LIN)', currentPrice: 37, avgPrice: 43 },
+        { id: 'MIL_CTR', name: 'Milano Stazione Centrale', currentPrice: 36, avgPrice: 42 }
       ],
       'Roma': [
-        { id: 'ROM_FCO', name: 'Roma Fiumicino (FCO)', type: 'Aeroporto', currentPrice: 36, avgPrice: 42 },
-        { id: 'ROM_CIA', name: 'Roma Ciampino (CIA)', type: 'Aeroporto', currentPrice: 33, avgPrice: 39 },
-        { id: 'ROM_TER', name: 'Roma Stazione Termini', type: 'Stazione', currentPrice: 38, avgPrice: 44 }
+        { id: 'ROM_FCO', name: 'Roma Fiumicino (FCO)', currentPrice: 36, avgPrice: 42 },
+        { id: 'ROM_TER', name: 'Roma Stazione Termini', currentPrice: 38, avgPrice: 44 }
       ],
       'Venezia': [
-        { id: 'VCE_AP', name: 'Venezia Marco Polo (VCE)', type: 'Aeroporto', currentPrice: 40, avgPrice: 46 },
-        { id: 'VCE_PR', name: 'Venezia Piazzale Roma', type: 'Città', currentPrice: 42, avgPrice: 49 },
-        { id: 'VCE_ME', name: 'Venezia Mestre Stazione', type: 'Stazione', currentPrice: 36, avgPrice: 41 }
+        { id: 'VCE_AP', name: 'Venezia Marco Polo (VCE)', currentPrice: 40, avgPrice: 46 },
+        { id: 'VCE_ME', name: 'Venezia Mestre Stazione', currentPrice: 36, avgPrice: 41 }
       ]
     };
 
     const ACRISS_CATEGORIES = [
-      { code: 'MCMR', name: 'Berlina - Citroën C1 (Manuale)' },
-      { code: 'ECMR', name: 'Berlina - Fiat 500 (Manuale)' },
-      { code: 'EDMR', name: 'Berlina - VW Polo (Manuale)' },
-      { code: 'CCMR/CCAR', name: 'Berlina Premium - MINI Hatch (Man/Auto)' },
-      { code: 'CDMR', name: 'Berlina - Fiat Tipo (Manuale)' },
+      { code: 'ECMR', name: 'Berlina - Fiat 500 (Man)' },
       { code: 'CLMR/CLAR', name: 'Berlina Premium - VW Golf (Man/Auto)' },
-      { code: 'CWMR', name: 'Station Wagon - Fiat Tipo SW (Manuale)' },
-      { code: 'IDMR/IDAR', name: 'Berlina Premium - Alfa Romeo Giulietta (Man/Auto)' },
-      { code: 'ILMR/ILAR', name: 'Berlina Premium - BMW Serie 1 (Man/Auto)' },
-      { code: 'SDMR/SDAR', name: 'Berlina Premium - BMW Serie 2 Active Tourer (Man/Auto)' },
-      { code: 'SWAR', name: 'Station Wagon Premium - BMW Serie 2 Grand Tourer (Auto)' },
       { code: 'FDAR', name: 'Berlina Premium - Alfa Romeo Giulia (Auto)' },
-      { code: 'FWAR', name: 'Station Wagon Premium - BMW Serie 3 Touring (Auto)' },
-      { code: 'PDAR', name: 'Berlina Premium - Audi A5 Sportback (Auto)' },
+      { code: 'FWAR', name: 'Station Wagon - BMW Serie 3 Touring (Auto)' },
       { code: 'LDAR', name: 'Berlina Premium - BMW Serie 5 (Auto)' },
-      { code: 'LWAR', name: 'Station Wagon Premium - BMW Serie 5 Touring (Auto)' },
-      { code: 'XCAR', name: 'Berlina Premium - BMW Serie 6 GT (Auto)' },
-      { code: 'XDAR', name: 'Berlina Premium - BMW Serie 7 (Auto)' },
-      { code: 'XSAR', name: 'Berlina Premium - BMW Serie 8 (Auto)' },
-      { code: 'FSAR', name: 'Coupé Premium - BMW Serie 2 Coupé (Auto)' },
-      { code: 'LSAR', name: 'Coupé Premium - BMW Serie 4 Gran Coupé (Auto)' },
-      { code: 'CVMR', name: 'Minivan - Fiat Qubo (Manuale)' },
-      { code: 'IVAR', name: 'Minivan - VW Touran 7S (Auto)' },
-      { code: 'SVAR', name: 'Minivan - Peugeot 5008 (Auto)' },
-      { code: 'FVMR/FVAR', name: 'Minivan - Fiat Talento (Man/Auto)' },
-      { code: 'CTMR/CTAR', name: 'Cabriolet - Fiat 500C (Man/Auto)' },
-      { code: 'STAR', name: 'Cabriolet - BMW Serie 2 Cabrio (Auto)' },
-      { code: 'LTAR', name: 'Cabriolet - BMW Serie 4 Cabrio (Auto)' },
-      { code: 'PTAR', name: 'Cabriolet - BMW Z4 (Auto)' },
-      { code: 'CFMR', name: 'Fuoristrada / SUV - Fiat 500X (Manuale)' },
-      { code: 'IFMR/IFAR', name: 'Fuoristrada / SUV - Jeep Renegade (Man/Auto)' },
-      { code: 'SFMR/SFAR', name: 'Fuoristrada / SUV - Ford Kuga (Man/Auto)' },
-      { code: 'FFAR', name: 'Fuoristrada / SUV - BMW X1 (Auto)' },
-      { code: 'PFAR', name: 'Fuoristrada / SUV - Jaguar I-Pace (Auto)' },
-      { code: 'XFAR', name: 'Fuoristrada / SUV - BMW X5 (Auto)' }
+      { code: 'XFAR', name: 'SUV Premium - BMW X5 (Auto)' }
     ];
 
-    let selectedCity = 'Monaco di Baviera';
+    const I18N = {
+      IT: {
+        subtitle: "Panoramica Prezzi Città & Filtro Stazioni",
+        sec1: "1. Seleziona Città e Categoria",
+        macroCity: "Macro Città",
+        filterStation: "Filtra Stazione (Opzionale)",
+        allStations: "✨ Mostra TUTTE le stazioni di",
+        category: "Categoria Veicolo / Codice ACRISS",
+        startDate: "Data Inizio",
+        endDate: "Data Fine",
+        btnSearch: "MOSTRA PREZZI E COMPARAZIONE",
+        sec2: "2. Risultati per",
+        currentPrice: "Prezzo Attuale",
+        avgPrice: "Media",
+        belowAvg: "SOTTO LA MEDIA",
+        aboveAvg: "SOPRA LA MEDIA",
+        feedbackTitle: "Lascia un Feedback",
+        usernamePlaceholder: "Il tuo Username (es. @tuo_handle)",
+        ratingLabel: "Valutazione dell'esperienza:",
+        commentPlaceholder: "Scrivi qui cosa ne pensi o come possiamo migliorare...",
+        btnSubmitFeedback: "INVIA FEEDBACK",
+        feedbackSuccess: "Grazie per la recensione! 🚗🔥"
+      },
+      EN: {
+        subtitle: "City Price Intelligence & Station Filtering",
+        sec1: "1. Select City and Category",
+        macroCity: "Macro City",
+        filterStation: "Filter Station (Optional)",
+        allStations: "✨ Show ALL stations in",
+        category: "Vehicle Category / ACRISS Code",
+        startDate: "Start Date",
+        endDate: "End Date",
+        btnSearch: "SHOW PRICES & COMPARISON",
+        sec2: "2. Results for",
+        currentPrice: "Current Price",
+        avgPrice: "Avg",
+        belowAvg: "BELOW AVERAGE",
+        aboveAvg: "ABOVE AVERAGE",
+        feedbackTitle: "Leave Feedback",
+        usernamePlaceholder: "Your Username (e.g., @your_handle)",
+        ratingLabel: "Experience Rating:",
+        commentPlaceholder: "Tell us what you think or how we can improve...",
+        btnSubmitFeedback: "SUBMIT FEEDBACK",
+        feedbackSuccess: "Thank you for your review! 🚗🔥"
+      }
+    };
+
+    function renderUI() {
+      const t = I18N[currentLang];
+      document.getElementById('lang-btn').innerText = currentLang === 'IT' ? '🇮🇹 IT' : '🇬🇧 EN';
+      document.getElementById('lbl-subtitle').innerText = t.subtitle;
+      document.getElementById('lbl-sec1').innerText = t.sec1;
+      document.getElementById('lbl-macro-city').innerText = t.macroCity;
+      document.getElementById('lbl-filter-station').innerText = t.filterStation;
+      document.getElementById('lbl-category').innerText = t.category;
+      document.getElementById('lbl-start-date').innerText = t.startDate;
+      document.getElementById('lbl-end-date').innerText = t.endDate;
+      document.getElementById('btn-search').innerText = t.btnSearch;
+
+      document.getElementById('lbl-feedback-title').innerText = t.feedbackTitle;
+      document.getElementById('fb-username').placeholder = t.usernamePlaceholder;
+      document.getElementById('lbl-rating').innerText = t.ratingLabel;
+      document.getElementById('fb-comment').placeholder = t.commentPlaceholder;
+      document.getElementById('btn-submit-fb').innerText = t.btnSubmitFeedback;
+
+      renderStations();
+    }
 
     function initUI() {
       const catSelect = document.getElementById('select-category');
@@ -376,14 +482,16 @@
         `<option value="${cat.code}">[${cat.code}] ${cat.name}</option>`
       ).join('');
 
-      renderStations();
+      renderUI();
+      setCarRating(5);
     }
 
     function renderStations() {
+      const t = I18N[currentLang];
       const stationsSelect = document.getElementById('select-station');
       const stations = CITY_STATIONS_MAP[selectedCity] || [];
       
-      let html = `<option value="ALL">✨ Mostra TUTTE le stazioni di ${selectedCity}</option>`;
+      let html = `<option value="ALL">${t.allStations} ${selectedCity}</option>`;
       html += stations.map(st => `<option value="${st.id}">📍 ${st.name}</option>`).join('');
       stationsSelect.innerHTML = html;
 
@@ -395,7 +503,47 @@
       renderStations();
     }
 
+    function toggleLang() {
+      currentLang = currentLang === 'IT' ? 'EN' : 'IT';
+      renderUI();
+    }
+
+    function toggleFeedbackModal() {
+      const modal = document.getElementById('feedback-modal');
+      modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function setCarRating(val) {
+      currentRating = val;
+      const stars = document.querySelectorAll('.car-star');
+      stars.forEach((star, idx) => {
+        if (idx < val) {
+          star.classList.remove('unselected');
+        } else {
+          star.classList.add('unselected');
+        }
+      });
+    }
+
+    function submitFeedback() {
+      const t = I18N[currentLang];
+      const user = document.getElementById('fb-username').value;
+      const comm = document.getElementById('fb-comment').value;
+
+      if (!user || !comm) {
+        alert(currentLang === 'IT' ? 'Compila tutti i campi!' : 'Please fill in all fields!');
+        return;
+      }
+
+      showToast(`${t.feedbackSuccess} (${user} - ${currentRating}/5 🚗)`);
+      toggleFeedbackModal();
+      document.getElementById('fb-username').value = '';
+      document.getElementById('fb-comment').value = '';
+      setCarRating(5);
+    }
+
     function runComparison() {
+      const t = I18N[currentLang];
       const city = selectedCity;
       const stationFilter = document.getElementById('select-station').value;
       const categoryCode = document.getElementById('select-category').value;
@@ -406,7 +554,7 @@
         : allCityStations.filter(s => s.id === stationFilter);
 
       document.getElementById('section-results').style.display = 'block';
-      document.getElementById('res-category-code').innerText = `2. Risultati per [${categoryCode}]`;
+      document.getElementById('res-sec2-title').innerText = `${t.sec2} [${categoryCode}]`;
       document.getElementById('res-city-name').innerText = city;
 
       const listElem = document.getElementById('results-list');
@@ -414,14 +562,14 @@
         const diffPct = (((st.currentPrice - st.avgPrice) / st.avgPrice) * 100).toFixed(1);
         const isGood = st.currentPrice <= st.avgPrice;
         const badgeClass = isGood ? 'badge-good' : 'badge-bad';
-        const badgeText = isGood ? `${diffPct}% SOTTO LA MEDIA` : `+${diffPct}% SOPRA LA MEDIA`;
+        const badgeText = isGood ? `${diffPct}% ${t.belowAvg}` : `+${diffPct}% ${t.aboveAvg}`;
 
         return `
           <div class="result-card">
             <div>
               <div style="font-size: 12px; font-weight: 800; color: #FFF">${st.name}</div>
               <div style="font-size: 10px; color: #8E8E93; margin-top: 2px;">
-                Prezzo Attuale: <strong style="color: #FF5F00">$${st.currentPrice}/gg</strong> (Media: $${st.avgPrice}/gg)
+                ${t.currentPrice}: <strong style="color: #FF5F00">$${st.currentPrice}/gg</strong> (${t.avgPrice}: $${st.avgPrice}/gg)
               </div>
             </div>
             <div class="${badgeClass}">${badgeText}</div>
@@ -429,7 +577,7 @@
         `;
       }).join('');
 
-      showToast(`Confronto prezzi mostrato per stazioni di ${city}!`);
+      showToast(`Comparazione caricata per stazioni di ${city}!`);
     }
 
     function showToast(msg) {
